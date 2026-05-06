@@ -18,6 +18,11 @@ class Chunk(BaseModel):
     page: int | str | None = None
     element_id: str | None = None
     kind: str = "document"
+    region_type: str | None = None
+    bbox: list[float] | None = None
+    text_source: str | None = None
+    layout_confidence: float | None = None
+    reading_order: int | None = None
     score: float | None = None
 
 class RetrievedChunk(Chunk):
@@ -31,6 +36,7 @@ class AnalysisResponse(BaseModel):
     model_status: list[ModelStatus]
     document: dict[str, Any]
     retrieved: list[RetrievedChunk]
+    metrics: dict[str, Any] = Field(default_factory=dict)
     warnings: list[str] = Field(default_factory=list)
 
 class ChatRequest(BaseModel):
@@ -42,6 +48,7 @@ class ChatResponse(BaseModel):
     question: str
     answer: str
     retrieved: list[RetrievedChunk]
+    metrics: dict[str, Any] = Field(default_factory=dict)
     warnings: list[str] = Field(default_factory=list)
 
 class HealthResponse(BaseModel):

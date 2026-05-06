@@ -27,6 +27,13 @@ for path in [MODELS_DIR, STORAGE_DIR, UPLOAD_DIR, INDEX_DIR, LAW_DIR]:
 
 DEVICE = os.getenv("APP_DEVICE", "auto")
 OCR_ENABLED = os.getenv("OCR_ENABLED", "true").lower() == "true"
+PDF_RENDER_SCALE = float(os.getenv("PDF_RENDER_SCALE", "2.0"))
+LAYOUT_ENABLED = os.getenv("LAYOUT_ENABLED", "true").lower() == "true"
+LAYOUT_MODEL_ID = os.getenv("LAYOUT_MODEL_ID", "").strip()
+LAYOUT_MIN_SCORE = float(os.getenv("LAYOUT_MIN_SCORE", "0.35"))
+LAYOUT_MIN_AREA = int(os.getenv("LAYOUT_MIN_AREA", "1200"))
+LAYOUT_MAX_REGIONS_PER_PAGE = int(os.getenv("LAYOUT_MAX_REGIONS_PER_PAGE", "40"))
+CNN_TEXT_REGIONS = os.getenv("CNN_TEXT_REGIONS", "false").lower() == "true"
 INFERENCE_TTA = os.getenv("INFERENCE_TTA", "true").lower() == "true"
 OOD_MAX_SOFTMAX = float(os.getenv("OOD_MAX_SOFTMAX", "0.4"))
 TAMPERING_THRESHOLD = float(os.getenv("TAMPERING_THRESHOLD", "0.5"))

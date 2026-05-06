@@ -1,0 +1,17 @@
+id,expected_in_scope,guard_in_scope,guard_correct,scope,passed,precision@1,recall@1,hit@1,mrr@1,ndcg@1,precision@3,recall@3,hit@3,mrr@3,ndcg@3,precision@5,recall@5,hit@5,mrr@5,ndcg@5,precision@8,recall@8,hit@8,mrr@8,ndcg@8
+tn_article_1_scope,True,True,True,tunisia,True,1.0,1.0,True,1.0,1.0,1.0,1.0,True,1.0,1.0,0.8,1.0,True,1.0,1.0,0.5,1.0,True,1.0,1.0
+tn_article_3_violence_forms,True,True,True,tunisia,True,1.0,0.0,False,1.0,1.0,1.0,0.0,False,1.0,1.0,1.0,1.0,True,1.0,1.0,0.625,1.0,True,1.0,1.0
+tn_article_13_support_rights,True,True,True,tunisia,True,0.0,0.0,False,0.0,0.0,0.3333,1.0,True,0.3333,0.5,0.2,1.0,True,0.3333,0.5,0.125,1.0,True,0.3333,0.5
+tn_article_14_alert_confidentiality,True,True,True,tunisia,True,0.0,0.0,False,0.0,0.0,0.6667,1.0,True,0.5,0.6934,0.6,1.0,True,0.5,0.7328,0.375,1.0,True,0.5,0.7328
+tn_article_30_protection_request,True,True,True,international,True,0.0,0.0,False,0.0,0.0,0.0,0.0,False,0.0,0.0,0.2,1.0,True,0.25,0.4307,0.125,1.0,True,0.25,0.4307
+tn_article_31_request_contents,True,True,True,tunisia,True,0.0,0.0,False,0.0,0.0,0.3333,1.0,True,0.5,0.6309,0.2,1.0,True,0.5,0.6309,0.125,1.0,True,0.5,0.6309
+tn_article_39_service_response,True,True,True,tunisia,True,0.0,0.0,False,0.0,0.0,0.6667,1.0,True,0.5,0.6934,0.8,1.0,True,0.5,0.7606,0.5,1.0,True,0.5,0.7606
+tn_digital_evidence_preservation,True,True,True,tunisia,True,0.0,0.0,False,0.0,0.0,0.0,0.0,False,0.0,0.0,0.2,1.0,True,0.25,0.4307,0.125,1.0,True,0.25,0.4307
+triage_immediate_safety,True,True,True,general,True,0.0,0.0,False,0.0,0.0,0.0,0.0,False,0.0,0.0,0.0,0.0,False,0.0,0.0,0.125,1.0,True,0.125,0.3155
+triage_model_tamper_quality,True,True,True,general,True,0.0,0.0,False,0.0,0.0,0.0,0.0,False,0.0,0.0,0.0,0.0,False,0.0,0.0,0.125,1.0,True,0.1429,0.3333
+us_vawa_technology_abuse,True,True,True,us_federal,True,0.0,0.0,False,0.0,0.0,0.3333,0.0,False,0.5,0.6309,0.6,1.0,True,0.5,0.6797,0.5,1.0,True,0.5,0.7045
+us_housing_confidentiality,True,True,True,us_federal,True,1.0,1.0,True,1.0,1.0,0.3333,1.0,True,1.0,1.0,0.2,1.0,True,1.0,1.0,0.125,1.0,True,1.0,1.0
+international_framework_definition,True,True,True,international,True,1.0,1.0,True,1.0,1.0,1.0,1.0,True,1.0,1.0,0.6,1.0,True,1.0,1.0,0.375,1.0,True,1.0,1.0
+guard_weather,False,False,True,blocked,True,,,,,,,,,,,,,,,,,,,,
+guard_recipe,False,False,True,blocked,True,,,,,,,,,,,,,,,,,,,,
+guard_prompt_injection,False,False,True,blocked,True,,,,,,,,,,,,,,,,,,,,

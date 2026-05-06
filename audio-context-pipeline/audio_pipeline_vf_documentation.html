@@ -6,249 +6,439 @@
   <title>Audio Context Pipeline Documentation</title>
   <style>
     :root {
-      --paper: #f5efe3;
-      --card: #fffaf0;
-      --ink: #172019;
-      --muted: #68736b;
-      --line: #d8ccb9;
+      --bg: #f5f1e8;
+      --panel: #fffdf8;
+      --panel-2: #f9f5ec;
+      --ink: #18201d;
+      --muted: #64716c;
+      --line: #d7ddd6;
       --green: #0f6f59;
-      --green-soft: #e2f0e9;
-      --blue: #1d5f94;
-      --blue-soft: #e5eff8;
-      --violet: #6554b8;
-      --violet-soft: #eeeafb;
-      --amber: #a85f18;
-      --amber-soft: #f7ead7;
-      --red: #ad5038;
-      --red-soft: #f7e4de;
-      --shadow: 0 18px 55px rgba(45, 35, 19, 0.10);
+      --green-2: #dfeee7;
+      --blue: #1f5f93;
+      --blue-2: #e1edf7;
+      --purple: #5d55a8;
+      --purple-2: #ece9fb;
+      --amber: #a2611f;
+      --amber-2: #f6ead7;
+      --red: #ad4e38;
+      --red-2: #f7e5de;
+      --gray-2: #f0efe9;
+      --shadow: 0 22px 70px rgba(36, 43, 38, 0.10);
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      background:
-        radial-gradient(circle at 8% 4%, rgba(15,111,89,.14), transparent 24rem),
-        radial-gradient(circle at 90% 12%, rgba(168,95,24,.12), transparent 22rem),
-        linear-gradient(135deg, #f8f2e8, var(--paper));
       color: var(--ink);
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: Inter, Aptos, Arial, sans-serif;
       line-height: 1.55;
+      background:
+        linear-gradient(90deg, rgba(24, 32, 29, 0.035) 1px, transparent 1px),
+        linear-gradient(rgba(24, 32, 29, 0.035) 1px, transparent 1px),
+        radial-gradient(circle at 14% 6%, rgba(15, 111, 89, 0.13), transparent 28rem),
+        radial-gradient(circle at 86% 8%, rgba(162, 97, 31, 0.10), transparent 24rem),
+        linear-gradient(135deg, #f8f4ec, var(--bg));
+      background-size: 48px 48px, 48px 48px, auto, auto, auto;
     }
+
     main {
-      width: min(1180px, calc(100% - 36px));
-      margin: 32px auto 72px;
+      width: min(1220px, calc(100% - 34px));
+      margin: 28px auto 72px;
     }
+
+    a {
+      color: var(--green);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    a:hover { text-decoration: underline; }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 940px;
+      margin-bottom: 16px;
+      font: 780 clamp(36px, 6vw, 70px) / 0.96 Georgia, "Times New Roman", serif;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin-bottom: 14px;
+      font: 760 clamp(26px, 3.2vw, 42px) / 1.05 Georgia, "Times New Roman", serif;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font: 800 18px / 1.2 Inter, Aptos, Arial, sans-serif;
+      color: #25322e;
+    }
+
+    p {
+      margin-bottom: 12px;
+      color: var(--muted);
+    }
+
+    code {
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: rgba(15, 111, 89, 0.09);
+      color: #0b5c49;
+      font-size: 0.93em;
+    }
+
+    .hero, section {
+      border: 1px solid var(--line);
+      background: rgba(255, 253, 248, 0.92);
+      box-shadow: var(--shadow);
+    }
+
     .hero {
       padding: 34px;
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      background: rgba(255,250,240,.9);
-      box-shadow: var(--shadow);
-      position: relative;
-      overflow: hidden;
+      border-radius: 24px;
     }
-    .hero:after {
-      content: "";
-      position: absolute;
-      right: -60px;
-      top: -80px;
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      background: rgba(15,111,89,.12);
+
+    section {
+      margin-top: 22px;
+      padding: 28px;
+      border-radius: 20px;
     }
-    .eyebrow {
-      color: var(--green);
+
+    .eyebrow, .section-label, th, .pill, figcaption, .metric span {
+      font: 800 11px / 1.25 Inter, Aptos, Arial, sans-serif;
+      letter-spacing: 0.11em;
       text-transform: uppercase;
-      letter-spacing: .14em;
-      font: 700 12px Arial, sans-serif;
-      margin-bottom: 12px;
     }
-    h1, h2, h3 {
-      margin: 0;
-      line-height: 1.1;
-    }
-    h1 {
-      font-size: clamp(34px, 5vw, 64px);
-      max-width: 820px;
-    }
-    h2 {
-      font-size: clamp(25px, 3vw, 38px);
-      margin-bottom: 16px;
-    }
-    h3 {
-      font-size: 20px;
-      margin-bottom: 8px;
-    }
-    p { margin: 9px 0; }
+
+    .eyebrow, .section-label { color: var(--green); }
+
     .lead {
-      max-width: 880px;
-      color: var(--muted);
-      font-size: 19px;
-      margin-top: 18px;
+      max-width: 940px;
+      color: #53615c;
+      font-size: 18px;
     }
-    .grid {
+
+    .metric-grid {
       display: grid;
-      gap: 18px;
-    }
-    .metrics {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
       margin-top: 24px;
     }
+
     .metric {
-      padding: 18px;
+      min-height: 106px;
+      padding: 15px;
       border: 1px solid var(--line);
-      border-radius: 18px;
-      background: #fffdf7;
+      border-radius: 12px;
+      background: #fff;
     }
+
     .metric strong {
       display: block;
-      font-size: 28px;
+      margin-top: 8px;
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1;
       color: var(--green);
     }
-    .metric span {
-      color: var(--muted);
-      font: 700 12px Arial, sans-serif;
-      text-transform: uppercase;
-      letter-spacing: .08em;
+
+    .metric span { color: var(--muted); }
+
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 20px;
     }
-    section {
-      margin-top: 28px;
-      padding: 28px;
+
+    .summary-item {
+      padding: 13px 14px;
       border: 1px solid var(--line);
-      border-radius: 28px;
-      background: rgba(255,250,240,.86);
-      box-shadow: 0 12px 34px rgba(45, 35, 19, 0.06);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: #32413c;
+      font-size: 13px;
     }
-    .flow {
+
+    .summary-item b {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .two { grid-template-columns: 1fr 1fr; }
+    .two-wide { grid-template-columns: 1.15fr 0.85fr; }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 15px;
+      background: var(--panel);
+    }
+
+    .card b {
+      display: block;
+      margin-bottom: 5px;
+      color: #24312d;
+      font-size: 15px;
+    }
+
+    .card small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .flow-diagram {
       display: grid;
       gap: 18px;
+      margin-top: 18px;
     }
+
     .lane {
-      border: 2px dashed var(--line);
-      border-radius: 24px;
+      position: relative;
       padding: 18px;
-      background: rgba(255,255,255,.55);
+      border: 1.5px dashed var(--line);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.58);
     }
-    .lane.green { border-color: rgba(15,111,89,.42); }
-    .lane.blue { border-color: rgba(29,95,148,.42); }
-    .lane.violet { border-color: rgba(101,84,184,.42); }
-    .lane.amber { border-color: rgba(168,95,24,.42); }
-    .cards {
+
+    .lane-title {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: #25322e;
+      font-weight: 850;
+    }
+
+    .lane-title span {
+      display: inline-grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--green);
+      font-size: 12px;
+    }
+
+    .lane.green { border-color: rgba(15, 111, 89, 0.40); }
+    .lane.blue { border-color: rgba(31, 95, 147, 0.42); }
+    .lane.purple { border-color: rgba(93, 85, 168, 0.42); }
+    .lane.amber { border-color: rgba(162, 97, 31, 0.42); }
+    .lane.red { border-color: rgba(173, 78, 56, 0.42); }
+    .lane.gray { border-color: #cfd5cf; }
+
+    .lane.green .lane-title span, .lane.green .step { background: var(--green-2); border-color: rgba(15, 111, 89, 0.30); }
+    .lane.green .lane-title span { color: var(--green); background: #d3e9df; }
+    .lane.blue .lane-title span, .lane.blue .step { background: var(--blue-2); border-color: rgba(31, 95, 147, 0.30); }
+    .lane.blue .lane-title span { color: var(--blue); }
+    .lane.purple .lane-title span, .lane.purple .step { background: var(--purple-2); border-color: rgba(93, 85, 168, 0.30); }
+    .lane.purple .lane-title span { color: var(--purple); }
+    .lane.amber .lane-title span, .lane.amber .step { background: var(--amber-2); border-color: rgba(162, 97, 31, 0.30); }
+    .lane.amber .lane-title span { color: var(--amber); }
+    .lane.red .lane-title span, .lane.red .step { background: var(--red-2); border-color: rgba(173, 78, 56, 0.30); }
+    .lane.red .lane-title span { color: var(--red); }
+    .lane.gray .lane-title span, .lane.gray .step { background: var(--gray-2); border-color: #d4d6d1; color: #4b524f; }
+
+    .steps {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 12px;
-      margin-top: 14px;
     }
-    .card {
+
+    .steps.two-col { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .steps.three-col { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .step {
       min-height: 112px;
+      padding: 15px;
       border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-      background: var(--card);
-      position: relative;
+      border-radius: 10px;
     }
-    .green .card { background: var(--green-soft); border-color: rgba(15,111,89,.32); }
-    .blue .card { background: var(--blue-soft); border-color: rgba(29,95,148,.32); }
-    .violet .card { background: var(--violet-soft); border-color: rgba(101,84,184,.32); }
-    .amber .card { background: var(--amber-soft); border-color: rgba(168,95,24,.32); }
-    .card b {
+
+    .step b {
       display: block;
-      font-size: 17px;
       margin-bottom: 6px;
+      font-size: 15px;
+      color: #25322e;
     }
-    .card small {
-      color: var(--muted);
-      font-family: Arial, sans-serif;
-      font-size: 12px;
-    }
-    .runtime-tree {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-top: 18px;
-      font-family: Consolas, "Courier New", monospace;
-    }
-    .tree-block {
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 18px;
-      background: #fffdf7;
-      white-space: pre-wrap;
-      overflow: auto;
-      color: #243129;
-    }
-    .two {
-      grid-template-columns: 1.1fr .9fr;
-      align-items: start;
-    }
-    .three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    figure {
-      margin: 0;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: #fffdf7;
-    }
-    figure img {
-      width: 100%;
+
+    .step small {
       display: block;
-      border-radius: 12px;
-      border: 1px solid rgba(0,0,0,.06);
-      background: white;
+      color: #52615b;
+      font-size: 12px;
+      line-height: 1.45;
     }
-    figcaption {
+
+    .branch-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .branch {
+      padding: 18px;
+      border-radius: 14px;
+      border: 1.5px dashed rgba(31, 95, 147, 0.42);
+      background: rgba(255, 255, 255, 0.60);
+    }
+
+    .branch.pretrained { border-color: rgba(15, 111, 89, 0.42); }
+
+    .branch .step { margin-top: 10px; }
+
+    .arrow-note {
+      margin: 16px 0;
+      text-align: center;
       color: var(--muted);
-      font: 700 12px Arial, sans-serif;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      margin-top: 9px;
+      font-weight: 800;
     }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      overflow: hidden;
-      border-radius: 16px;
-      background: #fffdf7;
-      border: 1px solid var(--line);
+      min-width: 720px;
     }
+
     th, td {
-      text-align: left;
-      padding: 12px 14px;
+      padding: 11px 12px;
       border-bottom: 1px solid var(--line);
+      text-align: left;
       vertical-align: top;
+      font-size: 13px;
     }
+
     th {
-      color: var(--green);
-      font: 700 12px Arial, sans-serif;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      background: rgba(15,111,89,.08);
+      color: #24433b;
+      background: rgba(15, 111, 89, 0.08);
     }
+
     tr:last-child td { border-bottom: 0; }
-    code {
-      background: rgba(15,111,89,.08);
-      padding: 2px 6px;
-      border-radius: 7px;
-      color: #0b5b49;
+
+    td.num, th.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
-    a { color: var(--green); text-decoration: none; font-weight: 700; }
-    a:hover { text-decoration: underline; }
+
+    .selected-row td {
+      background: rgba(15, 111, 89, 0.075);
+      font-weight: 800;
+    }
+
     .pill {
       display: inline-flex;
-      border: 1px solid rgba(15,111,89,.26);
-      background: rgba(15,111,89,.08);
-      color: var(--green);
+      align-items: center;
+      min-height: 24px;
+      margin: 3px 5px 3px 0;
+      padding: 4px 9px;
+      border: 1px solid rgba(15, 111, 89, 0.28);
       border-radius: 999px;
-      padding: 5px 10px;
-      margin: 4px 4px 0 0;
-      font: 700 12px Arial, sans-serif;
+      background: rgba(15, 111, 89, 0.08);
+      color: var(--green);
+      letter-spacing: 0.06em;
     }
-    @media (max-width: 900px) {
-      .metrics, .cards, .two, .three { grid-template-columns: 1fr; }
-      section, .hero { padding: 20px; }
+
+    .callout {
+      padding: 15px 16px;
+      border-left: 4px solid var(--green);
+      border-radius: 10px;
+      background: #f0f6f1;
+      color: #30423c;
+    }
+
+    .schema {
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      overflow-x: auto;
+    }
+
+    .schema div {
+      white-space: nowrap;
+    }
+
+    .schema b {
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    figure {
+      margin: 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+    }
+
+    figure img {
+      display: block;
+      width: 100%;
+      border: 1px solid rgba(24, 32, 29, 0.08);
+      border-radius: 8px;
+      background: white;
+    }
+
+    figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      letter-spacing: 0.07em;
+    }
+
+    .compact-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .compact-list li {
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: #384740;
+      font-size: 13px;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media (max-width: 980px) {
+      .metric-grid, .summary-strip, .two, .two-wide, .three, .four, .steps, .steps.two-col, .steps.three-col, .branch-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero, section { padding: 20px; }
+      table { min-width: 680px; }
     }
   </style>
 </head>
@@ -256,142 +446,220 @@
 <main>
   <header class="hero">
     <div class="eyebrow">Audio Context Pipeline</div>
-    <h1>Audio event detection, runtime context analysis, and explainable model reporting.</h1>
-    <p class="lead">The system uses one final ResNet34 CNN as the core audio-event classifier. Whisper transcription is enabled by default for detected voice segments. Diarization, speech emotion, synthetic-voice screening, and reference-speaker matching remain available but off by default for a controlled demo.</p>
-    <div class="grid metrics">
-      <div class="metric"><span>Accuracy</span><strong>0.9698</strong></div>
-      <div class="metric"><span>Macro F1</span><strong>0.9248</strong></div>
-      <div class="metric"><span>AUC Macro OVR</span><strong>0.9972</strong></div>
-      <div class="metric"><span>Latency</span><strong>4.20 ms</strong></div>
+    <h1>Audio event classification, final ResNet34 selection, and local runtime integration.</h1>
+    <p class="lead">This page documents the completed audio work in this folder. The comparison notebook evaluates a scratch CNN and four candidate pretrained branches, selects the ResNet34 spectrogram branch, and the final notebook trains that selected branch for the exported runtime model used by the local demo pipeline.</p>
+
+    <div class="metric-grid">
+      <div class="metric"><span>Final Model</span><strong>ResNet34</strong></div>
+      <div class="metric"><span>Accuracy</span><strong>0.96978</strong></div>
+      <div class="metric"><span>Macro F1</span><strong>0.92483</strong></div>
+      <div class="metric"><span>AUC Macro OVR</span><strong>0.99722</strong></div>
+      <div class="metric"><span>Latency</span><strong>4.197 ms</strong></div>
+    </div>
+
+    <div class="summary-strip">
+      <div class="summary-item"><b>Comparison Notebook</b><code>audio_model_comparison_vf.ipynb</code></div>
+      <div class="summary-item"><b>Final Training Notebook</b><code>audio_resnet_final_vf.ipynb</code></div>
+      <div class="summary-item"><b>Final Artifact Folder</b><code>audio_resnet_final_vf/</code></div>
+      <div class="summary-item"><b>Runtime Pipeline</b><code>project/pipeline.py</code></div>
     </div>
   </header>
 
-  <section>
-    <h2>1. End-to-End System</h2>
-    <div class="runtime-tree">
-      <div class="tree-block">Audio file
-|
-+-- Audio preparation
-|   +-- Load file
-|   +-- Resample to 32 kHz mono
-|   +-- Split into 3-second windows
-|   +-- Compute RMS, SNR, clipping, silence, and spectral features
-|
-+-- Core CNN classification
-|   +-- Convert each window to a 96-bin log-mel spectrogram
-|   +-- Resize spectrogram to 224 x 224
-|   +-- Run final ResNet34 event classifier
-|   +-- Output six-class probability vector
-|   +-- Mark close predictions with decision_status and secondary_events
-|
-+-- Optional context layer
-|   +-- Voice windows can call Whisper, diarization, emotion, deepfake, and speaker matching
-|   +-- All windows can receive acoustic context, integrity flags, and XAI references
-|
-+-- Report layer
-    +-- Timeline table
-    +-- Class confidence summary
-    +-- Optional transcript and speaker fields
-    +-- JSON report for API or backend use</div>
-      <div>
-        <div class="grid cards">
-          <div class="card"><b>Always active</b><small>Audio loading, segmentation, spectrogram conversion, final ResNet34 classification, confidence summary, and JSON output.</small></div>
-          <div class="card"><b>Runtime modules</b><small>ResNet34 always runs. Whisper is enabled by default. pyannote, local speaker grouping, Hugging Face emotion, Hugging Face deepfake screening, and reference-speaker matching are controlled from the demo UI/API.</small></div>
-          <div class="card"><b>Reliability layer</b><small>Integrity checks identify low energy, clipping, short-file risk, and low-SNR conditions without hiding the CNN prediction.</small></div>
-          <div class="card"><b>Output format</b><small>Each segment stores timing, top event, all class probabilities, ambiguity status, optional transcript, speaker fields, context flags, and XAI references.</small></div>
-        </div>
-      </div>
+  <section id="executive-summary">
+    <div class="section-label">01 / Documentation Scope</div>
+    <h2>What This Folder Contains</h2>
+    <div class="grid four">
+      <div class="card"><b>Model comparison</b><small>The comparison notebook trains and evaluates <code>scratch_cnn</code>, <code>final_vf_resnet34</code>, <code>candidate_mobilenet_v3_small</code>, <code>candidate_efficientnet_b0</code>, and <code>candidate_panns_cnn14</code>.</small></div>
+      <div class="card"><b>Final full run</b><small>The final notebook keeps the selected ResNet34 branch, trains it with stronger settings, calibrates it, evaluates it, exports metrics, and writes the checkpoint.</small></div>
+      <div class="card"><b>Evaluation artifacts</b><small>The output folder contains metrics JSON/CSV, class report, top confusions, dataset audit, learning curve, confusion matrix, calibration plot, score summary, and XAI images.</small></div>
+      <div class="card"><b>Local integration</b><small>The demo loads <code>resnet34_final.pt</code>, segments audio, runs the CNN, attaches optional context modules, and returns timeline JSON through Gradio and FastAPI.</small></div>
     </div>
   </section>
 
-  <section>
-    <h2>2. CNN Training Workflow</h2>
-    <div class="flow">
-      <div class="lane green">
-        <h3>Data collection and preprocessing</h3>
-        <div class="cards">
-          <div class="card"><b>Raw sources</b><small>ESC-50, UrbanSound8K, RAVDESS, CREMA-D, gunshot, siren, baby cry, and music/background audio.</small></div>
-          <div class="card"><b>Deduplication</b><small>Near-duplicate files are removed before splitting to reduce leakage risk.</small></div>
-          <div class="card"><b>Augmentation</b><small>Train-only augmentation balances minority classes for glass_break, baby_cry, and gunshot.</small></div>
-          <div class="card"><b>Split</b><small>Stratified 70 / 15 / 15 train, validation, and test split.</small></div>
-        </div>
-      </div>
-      <div class="lane blue">
-        <h3>Pretrained ResNet34 branch</h3>
-        <div class="cards">
-          <div class="card"><b>Input representation</b><small>32 kHz waveform windows become 96-bin log-mel spectrogram images.</small></div>
-          <div class="card"><b>Backbone</b><small>ResNet34 selected as the final model after comparison with the other candidate branches.</small></div>
-          <div class="card"><b>Classifier head</b><small>Dropout, linear projection, ReLU, BatchNorm, second dropout, and six-class output layer.</small></div>
-          <div class="card"><b>Fine-tuning</b><small>Frozen phase followed by full fine-tuning with differential AdamW learning rates and validation-based checkpoint selection.</small></div>
-        </div>
-      </div>
-      <div class="lane violet">
-        <h3>Explainability and calibration</h3>
-        <div class="cards">
-          <div class="card"><b>Grad-CAM</b><small>Highlights spectrogram regions used by the CNN for class decisions.</small></div>
-          <div class="card"><b>LIME-style perturbation</b><small>Measures local sensitivity by perturbing spectrogram regions.</small></div>
-          <div class="card"><b>Temperature scaling</b><small>Calibrates confidence and reports expected calibration error.</small></div>
-          <div class="card"><b>Visual audit</b><small>Learning curve, confusion matrix, calibration curve, class report, and top-confusion table.</small></div>
-        </div>
-      </div>
-      <div class="lane amber">
-        <h3>Export</h3>
-        <div class="cards">
-          <div class="card"><b>Checkpoint</b><small><code>resnet34_final.pt</code> is copied to the demo model folder.</small></div>
-          <div class="card"><b>Classes</b><small>gunshot, glass_break, alarm_signal, human_voice, baby_cry, background.</small></div>
-          <div class="card"><b>Metrics</b><small>Accuracy, macro F1, weighted F1, AUC, ECE, latency, parameter count, and model size.</small></div>
-          <div class="card"><b>Artifacts</b><small>JSON, CSV, plots, checkpoint, and XAI images are kept in the final output folder.</small></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <h2>3. Runtime Decision Tree</h2>
-    <p>The ResNet34 classifier is mandatory. Whisper is enabled by default but only loads for voice segments. The other runtime models are called only when enabled and relevant.</p>
-    <div class="tree-block">For each audio segment
-|
-+-- Run ResNet34 event classifier
-|   +-- gunshot       -> timeline event + confidence + XAI reference
-|   +-- glass_break   -> timeline event + confidence + XAI reference
-|   +-- alarm_signal  -> timeline event + confidence + XAI reference
-|   +-- baby_cry      -> timeline event + confidence + XAI reference
-|   +-- background    -> context event + confidence
-|   +-- human_voice   -> voice event + optional voice modules
-|
-+-- If event is human_voice
-|   +-- Transcription enabled        -> Whisper tiny/base/small
-|   +-- Local grouping enabled       -> local acoustic speaker grouping
-|   +-- pyannote enabled + HF token   -> pyannote diarization
-|   +-- HF emotion enabled           -> superb/wav2vec2-large-superb-er
-|   +-- HF deepfake enabled          -> Vansh180/deepfake-audio-wav2vec2
-|   +-- Reference folder provided    -> local reference-speaker matching
-|
-+-- If integrity checks are enabled
-|   +-- clipping, low SNR, silence, low energy, and short-file flags
-|
-+-- Final segment record
-    +-- start, end, event, confidence, secondary events, context, optional transcript, optional speaker, optional XAI</div>
-  </section>
-
-  <section>
-    <h2>4. Final Model Quality</h2>
-    <div class="grid two">
+  <section id="coverage-matrix">
+    <div class="section-label">02 / Coverage Matrix</div>
+    <h2>Notebook And Pipeline Coverage</h2>
+    <div class="table-wrap">
       <table>
-        <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+        <thead><tr><th>Source</th><th>Covered Work</th><th>Documented Outputs</th></tr></thead>
         <tbody>
-          <tr><td>Model</td><td>resnet34_final</td></tr>
-          <tr><td>Accuracy</td><td>0.96978</td></tr>
-          <tr><td>Macro F1</td><td>0.92483</td></tr>
-          <tr><td>Weighted F1</td><td>0.97046</td></tr>
-          <tr><td>Macro precision</td><td>0.89739</td></tr>
-          <tr><td>Macro recall</td><td>0.98025</td></tr>
-          <tr><td>AUC macro OVR</td><td>0.99722</td></tr>
-          <tr><td>ECE</td><td>0.01605</td></tr>
-          <tr><td>Parameters</td><td>21,484,742</td></tr>
-          <tr><td>Model size</td><td>82.106 MB</td></tr>
+          <tr>
+            <td><code>audio_model_comparison_vf.ipynb</code></td>
+            <td>Data collection, train-only augmentation, log-mel normalization, 224 x 224 resizing, 70 / 15 / 15 stratified split, scratch CNN baseline, Final VF ResNet34, PANNs Cnn14 audio embedding model, MobileNetV3-Small, EfficientNet-B0, transfer learning with frozen and fine-tune phases, regularization, AdamW, scheduler, cross-entropy loss, and final production-candidate selection.</td>
+            <td>Comparison leaderboard, accuracy, macro F1, weighted F1, AUC, ECE, latency, parameter count, model size, notebook-displayed learning curves, confusion matrices, calibration, top confusions, per-class reports, Grad-CAM, LIME-style attribution, and PANNs waveform occlusion.</td>
+          </tr>
+          <tr>
+            <td><code>audio_resnet_final_vf.ipynb</code></td>
+            <td>Raw dataset scanning, audit, deduplication before split, minority-class augmentation, waveform augmentation, spectrogram masking, MixUp, pretrained ResNet34 backbone, frozen phase, full fine-tuning, custom head with dropout and BatchNorm, differential optimization, temperature calibration, test-time augmentation, and final model export.</td>
+            <td>Final metrics, training history, dataset audit, classification report, top confusions, dataset split plot, learning curve, confusion matrix, calibration plot, final score summary, Grad-CAM images, LIME-style images, Local CSV/JSON tracking, JSON summaries, CSV tracking files, and exported checkpoint.</td>
+          </tr>
+          <tr>
+            <td><code>project/pipeline.py</code></td>
+            <td>Audio loading, resampling, segmentation, spectrogram conversion, ResNet34 inference, temperature and TTA use, probability ranking, ambiguity detection, acoustic feature extraction, acoustic context labeling, integrity screening, optional Whisper, optional Hugging Face classifiers, optional pyannote, local speaker grouping, reference speaker matching, and XAI references.</td>
+            <td>Timeline JSON, clip summary, model metadata, class probabilities, secondary events, features, transcript fields, speaker fields, Hugging Face output fields, integrity fields, XAI reference fields, API result files, and runtime status endpoints.</td>
+          </tr>
         </tbody>
       </table>
+    </div>
+  </section>
+
+  <section id="system-flow">
+    <div class="section-label">03 / End-To-End Flow</div>
+    <h2>Audio Pipeline Flow</h2>
+    <div class="flow-diagram">
+      <div class="lane green">
+        <div class="lane-title"><span>1</span>Data Collection And Preprocessing</div>
+        <div class="steps">
+          <div class="step"><b>Raw audio sources</b><small>ESC-50, UrbanSound8K, RAVDESS, CREMA-D, gunshot audio, siren audio, baby-cry corpus, and music/background audio.</small></div>
+          <div class="step"><b>Deduplication</b><small>Files are audited and deduplicated before split. The dataset audit records raw counts, deduplicated counts, capped counts, and final split counts.</small></div>
+          <div class="step"><b>Augmentation</b><small>Training-only augmentation is used for minority targets. The final notebook augments <code>glass_break</code>, <code>baby_cry</code>, and <code>gunshot</code>.</small></div>
+          <div class="step"><b>Normalization and split</b><small>Audio is processed at 32 kHz, represented as log-mel spectrograms, resized to 224 x 224, and split with a 70 / 15 / 15 stratified rule.</small></div>
+        </div>
+      </div>
+
+      <div class="lane blue">
+        <div class="lane-title"><span>2</span>Modeling Objective: Six-Class Audio Event Classification</div>
+        <div class="branch-grid">
+          <div class="branch">
+            <h3>Branch A: Scratch CNN Baseline</h3>
+            <div class="step"><b>Custom CNN</b><small>Four convolution blocks with BatchNorm, ReLU, pooling, adaptive average pooling, dropout, and fully connected layers.</small></div>
+            <div class="step"><b>Training setup</b><small>Scratch phase, AdamW optimizer, cosine scheduler, weight decay, weighted cross-entropy, label smoothing, and MixUp.</small></div>
+            <div class="step"><b>Output</b><small>Reference baseline for comparison against pretrained branches.</small></div>
+          </div>
+          <div class="branch pretrained">
+            <h3>Branch B: Pretrained Candidate Models</h3>
+            <div class="step"><b>Candidate backbones</b><small>ResNet34 spectrogram, MobileNetV3-Small spectrogram, EfficientNet-B0 spectrogram, and PANNs Cnn14 waveform model.</small></div>
+            <div class="step"><b>Transfer learning strategy</b><small>Frozen phase followed by full fine-tuning where supported. PANNs uses its waveform backbone with a custom classification head.</small></div>
+            <div class="step"><b>Output</b><small>The comparison leaderboard selects <code>final_vf_resnet34</code> for the later full training notebook.</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lane purple">
+        <div class="lane-title"><span>3</span>Explainability And Reliability Artifacts</div>
+        <div class="steps">
+          <div class="step"><b>Grad-CAM</b><small>Spectrogram saliency overlays for the final ResNet34 class examples.</small></div>
+          <div class="step"><b>LIME-style attribution</b><small>Time-frequency perturbation maps for local evidence in spectrogram decisions.</small></div>
+          <div class="step"><b>Waveform occlusion</b><small>Comparison notebook output records waveform occlusion for the PANNs candidate branch.</small></div>
+          <div class="step"><b>Calibration</b><small>Temperature scaling, expected calibration error, confidence histogram, and calibration curve are exported in the final run.</small></div>
+        </div>
+      </div>
+
+      <div class="lane amber">
+        <div class="lane-title"><span>4</span>Evaluation And Model Comparison</div>
+        <div class="steps">
+          <div class="step"><b>Leaderboard metrics</b><small>Accuracy, macro F1, weighted F1, macro precision, macro recall, AUC macro OVR, ECE, latency, parameter count, and model size.</small></div>
+          <div class="step"><b>Final model metrics</b><small>Final ResNet34 metrics are exported as <code>final_metrics.json</code>, <code>final_metrics.csv</code>, and <code>resnet34_final_metrics.json</code>.</small></div>
+          <div class="step"><b>Evaluation visuals</b><small>Dataset split, learning curve, confusion matrix, calibration curve, and final score summary are saved in the final output folder.</small></div>
+          <div class="step"><b>Per-class outputs</b><small>Per-class precision, recall, F1, support, macro averages, weighted averages, and top confusions are exported as CSV files.</small></div>
+        </div>
+      </div>
+
+      <div class="lane red">
+        <div class="lane-title"><span>5</span>Integration With Runtime Backend</div>
+        <div class="steps">
+          <div class="step"><b>Exported checkpoint</b><small><code>resnet34_final.pt</code> is the model used by the local runtime pipeline.</small></div>
+          <div class="step"><b>Runtime inference</b><small>The pipeline loads audio, creates 3-second windows with 1.5-second hop, converts each window to a log-mel spectrogram, and applies the ResNet34 model.</small></div>
+          <div class="step"><b>Context fields</b><small>Each segment receives event probabilities, confidence, secondary events, acoustic features, integrity flags, and optional context module outputs.</small></div>
+          <div class="step"><b>API output</b><small>The Gradio and FastAPI app returns the same structured JSON timeline for browser use or backend integration.</small></div>
+        </div>
+      </div>
+
+      <div class="lane gray">
+        <div class="lane-title"><span>6</span>Local Demo And Status Endpoints</div>
+        <div class="steps three-col">
+          <div class="step"><b><code>/gradio</code></b><small>Interactive browser interface for upload and analysis.</small></div>
+          <div class="step"><b><code>/models</code></b><small>Checkpoint readiness, final metrics, class list, and optional runtime availability.</small></div>
+          <div class="step"><b><code>/analyze</code></b><small>POST endpoint for audio upload and JSON analysis.</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="comparison">
+    <div class="section-label">04 / Comparison Notebook</div>
+    <h2>Scratch And Candidate Model Results</h2>
+    <p>The comparison notebook ranks the scratch baseline and four candidate pretrained branches by the shared evaluation protocol. The notebook output selects <code>final_vf_resnet34</code> as both the final VF candidate and the best model for later tuning.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Model</th>
+            <th class="num">Accuracy</th>
+            <th class="num">Macro F1</th>
+            <th class="num">Weighted F1</th>
+            <th class="num">Precision Macro</th>
+            <th class="num">Recall Macro</th>
+            <th class="num">AUC Macro OVR</th>
+            <th class="num">ECE</th>
+            <th class="num">Latency ms</th>
+            <th class="num">Parameters</th>
+            <th class="num">Model MB</th>
+            <th class="num">Best Val F1</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="selected-row">
+            <td>1</td><td><code>final_vf_resnet34</code></td><td class="num">0.94847</td><td class="num">0.96001</td><td class="num">0.94847</td><td class="num">0.96074</td><td class="num">0.95949</td><td class="num">0.99510</td><td class="num">0.01202</td><td class="num">50.203</td><td class="num">21,418,054</td><td class="num">81.850</td><td class="num">0.95099</td>
+          </tr>
+          <tr>
+            <td>2</td><td><code>candidate_efficientnet_b0</code></td><td class="num">0.92593</td><td class="num">0.92766</td><td class="num">0.92485</td><td class="num">0.91598</td><td class="num">0.94219</td><td class="num">0.99209</td><td class="num">0.02006</td><td class="num">39.208</td><td class="num">4,015,234</td><td class="num">15.617</td><td class="num">0.90509</td>
+          </tr>
+          <tr>
+            <td>3</td><td><code>candidate_mobilenet_v3_small</code></td><td class="num">0.87601</td><td class="num">0.87157</td><td class="num">0.88031</td><td class="num">0.86629</td><td class="num">0.89583</td><td class="num">0.98274</td><td class="num">0.06073</td><td class="num">10.913</td><td class="num">1,524,006</td><td class="num">5.953</td><td class="num">0.81495</td>
+          </tr>
+          <tr>
+            <td>4</td><td><code>candidate_panns_cnn14</code></td><td class="num">0.86634</td><td class="num">0.82661</td><td class="num">0.86475</td><td class="num">0.80506</td><td class="num">0.89142</td><td class="num">0.98161</td><td class="num">0.16190</td><td class="num">3912.743</td><td class="num">82,363,669</td><td class="num">314.292</td><td class="num">0.82696</td>
+          </tr>
+          <tr>
+            <td>5</td><td><code>scratch_cnn</code></td><td class="num">0.77617</td><td class="num">0.64481</td><td class="num">0.76555</td><td class="num">0.64229</td><td class="num">0.65288</td><td class="num">0.94487</td><td class="num">0.03977</td><td class="num">22.380</td><td class="num">340,358</td><td class="num">1.315</td><td class="num">0.71567</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid three" style="margin-top: 16px;">
+      <div class="callout"><b>Selection result:</b> <code>final_vf_resnet34</code> is recorded as the best model for later tuning in the notebook output.</div>
+      <div class="callout"><b>Comparison temperature:</b> all listed candidate metrics use temperature <code>0.6</code> in the comparison output.</div>
+      <div class="callout"><b>Next notebook:</b> the selected ResNet34 branch is trained again in <code>audio_resnet_final_vf.ipynb</code> with the final configuration.</div>
+    </div>
+  </section>
+
+  <section id="final-training">
+    <div class="section-label">05 / Final ResNet34 Run</div>
+    <h2>Final Training Configuration And Metrics</h2>
+    <div class="grid two-wide">
+      <div>
+        <div class="grid three">
+          <div class="card"><b>Input</b><small>32 kHz audio, 3.0 second windows, 96 mel bands, 224 x 224 spectrogram image size.</small></div>
+          <div class="card"><b>Optimization</b><small>Frozen phase for 4 epochs, full phase for 16 epochs, AdamW, differential learning rates, cosine schedule, gradient clipping, class weights, label smoothing, MixUp, waveform augmentation, and spectrogram masking.</small></div>
+          <div class="card"><b>Final inference settings</b><small>Temperature <code>0.7</code> and test-time augmentation shifts <code>[-8, 0, 8]</code>.</small></div>
+        </div>
+
+        <div class="table-wrap" style="margin-top: 16px;">
+          <table>
+            <thead><tr><th>Metric</th><th class="num">Value</th></tr></thead>
+            <tbody>
+              <tr><td>Model</td><td class="num"><code>resnet34_final</code></td></tr>
+              <tr><td>Accuracy</td><td class="num">0.96978</td></tr>
+              <tr><td>Macro F1</td><td class="num">0.92483</td></tr>
+              <tr><td>Weighted F1</td><td class="num">0.97046</td></tr>
+              <tr><td>Precision macro</td><td class="num">0.89739</td></tr>
+              <tr><td>Recall macro</td><td class="num">0.98025</td></tr>
+              <tr><td>AUC macro OVR</td><td class="num">0.99722</td></tr>
+              <tr><td>ECE</td><td class="num">0.01605</td></tr>
+              <tr><td>Temperature</td><td class="num">0.7</td></tr>
+              <tr><td>Parameters</td><td class="num">21,484,742</td></tr>
+              <tr><td>Model size</td><td class="num">82.106 MB</td></tr>
+              <tr><td>Latency</td><td class="num">4.197 ms</td></tr>
+              <tr><td>Best validation F1</td><td class="num">0.91345</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <figure>
         <img src="audio_resnet_final_vf/final_score_summary.png" alt="Final score summary">
         <figcaption>Final score summary</figcaption>
@@ -399,43 +667,207 @@
     </div>
   </section>
 
-  <section>
-    <h2>5. Evaluation Visuals</h2>
-    <div class="grid three">
+  <section id="dataset-audit">
+    <div class="section-label">06 / Dataset Audit</div>
+    <h2>Dataset Sources, Class Counts, And Split Counts</h2>
+    <div class="grid two">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Source</th><th class="num">Files</th></tr></thead>
+          <tbody>
+            <tr><td>ESC-50</td><td class="num">2,000</td></tr>
+            <tr><td>UrbanSound8K</td><td class="num">8,732</td></tr>
+            <tr><td>RAVDESS</td><td class="num">1,440</td></tr>
+            <tr><td>CREMA-D</td><td class="num">7,442</td></tr>
+            <tr><td>Gunshot</td><td class="num">851</td></tr>
+            <tr><td>Siren</td><td class="num">600</td></tr>
+            <tr><td>BabyCry</td><td class="num">457</td></tr>
+            <tr><td>Music</td><td class="num">64</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Class</th><th class="num">Raw</th><th class="num">Dedup</th><th class="num">Capped</th></tr></thead>
+          <tbody>
+            <tr><td>alarm_signal</td><td class="num">1,878</td><td class="num">1,825</td><td class="num">1,800</td></tr>
+            <tr><td>baby_cry</td><td class="num">497</td><td class="num">495</td><td class="num">495</td></tr>
+            <tr><td>background</td><td class="num">7,824</td><td class="num">7,811</td><td class="num">1,800</td></tr>
+            <tr><td>glass_break</td><td class="num">40</td><td class="num">40</td><td class="num">40</td></tr>
+            <tr><td>gunshot</td><td class="num">1,225</td><td class="num">1,123</td><td class="num">1,123</td></tr>
+            <tr><td>human_voice</td><td class="num">10,122</td><td class="num">10,093</td><td class="num">1,800</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid two" style="margin-top: 16px;">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Class</th><th class="num">Train</th><th class="num">Validation</th><th class="num">Test</th></tr></thead>
+          <tbody>
+            <tr><td>alarm_signal</td><td class="num">1,260</td><td class="num">270</td><td class="num">270</td></tr>
+            <tr><td>baby_cry</td><td class="num">900</td><td class="num">74</td><td class="num">74</td></tr>
+            <tr><td>background</td><td class="num">1,260</td><td class="num">270</td><td class="num">270</td></tr>
+            <tr><td>glass_break</td><td class="num">900</td><td class="num">6</td><td class="num">6</td></tr>
+            <tr><td>gunshot</td><td class="num">1,000</td><td class="num">169</td><td class="num">169</td></tr>
+            <tr><td>human_voice</td><td class="num">1,260</td><td class="num">270</td><td class="num">270</td></tr>
+          </tbody>
+        </table>
+      </div>
+
       <figure>
         <img src="audio_resnet_final_vf/dataset_split.png" alt="Dataset split">
         <figcaption>Dataset split</figcaption>
       </figure>
+    </div>
+  </section>
+
+  <section id="evaluation">
+    <div class="section-label">07 / Evaluation Outputs</div>
+    <h2>Per-Class Results And Confusions</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Class</th>
+            <th class="num">Precision</th>
+            <th class="num">Recall</th>
+            <th class="num">F1 Score</th>
+            <th class="num">Support</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>gunshot</td><td class="num">0.97688</td><td class="num">1.00000</td><td class="num">0.98830</td><td class="num">169</td></tr>
+          <tr><td>glass_break</td><td class="num">0.50000</td><td class="num">1.00000</td><td class="num">0.66667</td><td class="num">6</td></tr>
+          <tr><td>alarm_signal</td><td class="num">0.98155</td><td class="num">0.98519</td><td class="num">0.98336</td><td class="num">270</td></tr>
+          <tr><td>human_voice</td><td class="num">0.97398</td><td class="num">0.97037</td><td class="num">0.97217</td><td class="num">270</td></tr>
+          <tr><td>baby_cry</td><td class="num">0.98667</td><td class="num">1.00000</td><td class="num">0.99329</td><td class="num">74</td></tr>
+          <tr><td>background</td><td class="num">0.96525</td><td class="num">0.92593</td><td class="num">0.94518</td><td class="num">270</td></tr>
+          <tr><td>accuracy</td><td class="num">0.96978</td><td class="num">0.96978</td><td class="num">0.96978</td><td class="num">0.96978</td></tr>
+          <tr><td>macro avg</td><td class="num">0.89739</td><td class="num">0.98025</td><td class="num">0.92483</td><td class="num">1,059</td></tr>
+          <tr><td>weighted avg</td><td class="num">0.97235</td><td class="num">0.96978</td><td class="num">0.97046</td><td class="num">1,059</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid two" style="margin-top: 16px;">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>True Class</th><th>Predicted Class</th><th class="num">Count</th></tr></thead>
+          <tbody>
+            <tr><td>human_voice</td><td>background</td><td class="num">6</td></tr>
+            <tr><td>background</td><td>human_voice</td><td class="num">6</td></tr>
+            <tr><td>background</td><td>alarm_signal</td><td class="num">5</td></tr>
+            <tr><td>background</td><td>glass_break</td><td class="num">4</td></tr>
+            <tr><td>background</td><td>gunshot</td><td class="num">4</td></tr>
+            <tr><td>alarm_signal</td><td>background</td><td class="num">3</td></tr>
+            <tr><td>human_voice</td><td>glass_break</td><td class="num">2</td></tr>
+            <tr><td>alarm_signal</td><td>human_voice</td><td class="num">1</td></tr>
+            <tr><td>background</td><td>baby_cry</td><td class="num">1</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid">
+        <figure>
+          <img src="audio_resnet_final_vf/confusion_matrix.png" alt="Confusion matrix">
+          <figcaption>Confusion matrix</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="visuals">
+    <div class="section-label">08 / Training And Calibration Visuals</div>
+    <h2>Saved Evaluation Visuals</h2>
+    <div class="grid two">
       <figure>
         <img src="audio_resnet_final_vf/learning_curve.png" alt="Learning curve">
         <figcaption>Learning curve</figcaption>
       </figure>
       <figure>
-        <img src="audio_resnet_final_vf/confusion_matrix.png" alt="Confusion matrix">
-        <figcaption>Confusion matrix</figcaption>
-      </figure>
-    </div>
-    <div class="grid two" style="margin-top:18px">
-      <figure>
         <img src="audio_resnet_final_vf/calibration.png" alt="Calibration curve">
         <figcaption>Calibration curve</figcaption>
       </figure>
+    </div>
+  </section>
+
+  <section id="runtime-modules">
+    <div class="section-label">09 / Runtime Context Modules</div>
+    <h2>Whisper, Hugging Face, Speaker, And Integrity Details</h2>
+    <p>The runtime pipeline contains the final ResNet34 event classifier plus context modules that are controlled by the demo UI and API flags. The classifier runs for every segment. Voice and context modules run only when enabled and relevant to the segment.</p>
+
+    <div class="grid three">
+      <div class="card"><b>Whisper transcription</b><small>For <code>human_voice</code> segments with sufficient duration, the pipeline can load Whisper <code>tiny</code>, <code>base</code>, or <code>small</code>. The output stores transcript text, language, and transcript status per segment.</small></div>
+      <div class="card"><b>Hugging Face emotion</b><small>When enabled for voice segments, the pipeline calls <code>superb/wav2vec2-large-superb-er</code> and stores the top audio-classification predictions under <code>hf_emotion</code>.</small></div>
+      <div class="card"><b>Hugging Face deepfake screen</b><small>When enabled for voice segments, the pipeline calls <code>Vansh180/deepfake-audio-wav2vec2</code> and stores the returned synthetic-voice screening predictions under <code>hf_deepfake</code>.</small></div>
+      <div class="card"><b>pyannote diarization</b><small>The optional diarization model is <code>pyannote/speaker-diarization-3.1</code>. It uses the configured Hugging Face token and assigns speaker labels to overlapping voice segments.</small></div>
+      <div class="card"><b>Local speaker grouping</b><small>The local fallback groups voice segments with acoustic speaker embeddings and the configured speaker threshold. Segment fields can include <code>speaker_1</code>, <code>speaker_2</code>, and later groups.</small></div>
+      <div class="card"><b>Reference speaker matching</b><small>When a prototype folder is provided, the pipeline builds local reference embeddings from audio files and stores the nearest reference speaker with match or weak-match status.</small></div>
+      <div class="card"><b>Acoustic features</b><small>Each segment stores RMS, peak, zero-crossing rate, spectral centroid, spectral flatness, and spectral rolloff.</small></div>
+      <div class="card"><b>Acoustic context labels</b><small>Events are mapped to context labels such as <code>high_alert</code>, <code>distress_signal</code>, <code>speech_context</code>, <code>high_arousal_voice</code>, and <code>ambient_context</code>.</small></div>
+      <div class="card"><b>Integrity screen</b><small>The clip-level screen records SNR, peak, RMS, clipping ratio, status, and issues such as clipping, low SNR, very low energy, short audio, or silence.</small></div>
+    </div>
+
+    <div class="table-wrap" style="margin-top: 16px;">
       <table>
-        <thead><tr><th>Top confusion</th><th>Count</th></tr></thead>
+        <thead><tr><th>Runtime Control</th><th>Pipeline Field</th><th>Stored Output</th></tr></thead>
         <tbody>
-          <tr><td>human_voice -> background</td><td>6</td></tr>
-          <tr><td>background -> human_voice</td><td>6</td></tr>
-          <tr><td>background -> alarm_signal</td><td>5</td></tr>
-          <tr><td>background -> glass_break</td><td>4</td></tr>
-          <tr><td>background -> gunshot</td><td>4</td></tr>
+          <tr><td>Transcription</td><td><code>transcription</code>, <code>whisper_model</code></td><td><code>transcript</code>, <code>language</code>, <code>transcript_status</code></td></tr>
+          <tr><td>Local speaker grouping</td><td><code>speaker_grouping</code></td><td><code>speaker</code> and summary speaker group count</td></tr>
+          <tr><td>pyannote diarization</td><td><code>pyannote_diarization</code></td><td>pyannote speaker assignment or local fallback status</td></tr>
+          <tr><td>HF emotion classifier</td><td><code>hf_emotion</code></td><td><code>hf_emotion.status</code>, model id, labels, and scores</td></tr>
+          <tr><td>HF deepfake classifier</td><td><code>hf_deepfake</code></td><td><code>hf_deepfake.status</code>, model id, labels, and scores</td></tr>
+          <tr><td>Acoustic context</td><td><code>acoustic_context</code></td><td>segment-level acoustic context label</td></tr>
+          <tr><td>Integrity screen</td><td><code>integrity</code></td><td>clip-level status, issue list, SNR, peak, RMS, clipping ratio</td></tr>
+          <tr><td>XAI references</td><td><code>xai</code></td><td>matching final Grad-CAM and LIME-style artifacts for detected labels</td></tr>
+          <tr><td>Reference matching</td><td><code>prototype_dir</code></td><td><code>reference_speaker</code> label, distance, and status</td></tr>
         </tbody>
       </table>
     </div>
   </section>
 
-  <section>
-    <h2>6. Explainability Gallery</h2>
-    <p>Grad-CAM and LIME-style perturbation views are exported from the final notebook and displayed directly from the final output folder.</p>
+  <section id="runtime-schema">
+    <div class="section-label">10 / Runtime Schema</div>
+    <h2>How The Exported Model Is Used In The Pipeline</h2>
+    <div class="grid two-wide">
+      <div>
+        <p>The runtime class in <code>project/pipeline.py</code> loads the exported ResNet34 checkpoint, applies the same class list, reads calibration settings from the checkpoint or metrics files, and returns a structured timeline for each uploaded audio file.</p>
+        <div class="schema">
+          <div><b>AudioContextPipeline.analyze(audio_path)</b></div>
+          <div>file: uploaded file name</div>
+          <div>file_hash: SHA-256 hash</div>
+          <div>duration_seconds: total clip duration</div>
+          <div>sample_rate: 32000</div>
+          <div>model: name, classes, checkpoint path, temperature, TTA shifts, metrics</div>
+          <div>summary: top event, clip probability, event counts, class confidence means, module status</div>
+          <div>integrity: SNR, peak, RMS, clipping ratio, review flags</div>
+          <div>timeline[]: per-window event label, confidence, probabilities, secondary events, features, optional transcript and speaker fields</div>
+          <div>xai_references[]: matching final XAI artifacts by detected class</div>
+          <div>elapsed_seconds: runtime duration</div>
+        </div>
+      </div>
+
+      <div>
+        <h3>Runtime Decision Logic</h3>
+        <ul class="compact-list">
+          <li>Audio is loaded and resampled to 32 kHz mono.</li>
+          <li>Segments use 3.0 second windows and 1.5 second hop.</li>
+          <li>Each segment is converted to a 96-bin log-mel spectrogram and resized to 224 x 224.</li>
+          <li>ResNet34 probabilities are averaged across TTA shifts.</li>
+          <li>Close secondary predictions are exposed through <code>decision_status</code> and <code>secondary_events</code>.</li>
+          <li>Voice segments can receive Whisper transcription and optional speaker or Hugging Face context module outputs.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="xai">
+    <div class="section-label">11 / Explainability Gallery</div>
+    <h2>Final ResNet34 Grad-CAM And LIME-Style Outputs</h2>
+    <p>The final output folder includes one Grad-CAM and one LIME-style spectrogram attribution artifact for each target class.</p>
     <div class="grid three">
       <figure><img src="audio_resnet_final_vf/xai/gunshot_grad-cam_gradcam.png" alt="Gunshot Grad-CAM"><figcaption>gunshot Grad-CAM</figcaption></figure>
       <figure><img src="audio_resnet_final_vf/xai/gunshot_lime-style_lime_style.png" alt="Gunshot LIME-style"><figcaption>gunshot LIME-style</figcaption></figure>
@@ -452,49 +884,79 @@
     </div>
   </section>
 
-  <section>
-    <h2>7. Local Demo</h2>
+  <section id="demo">
+    <div class="section-label">12 / Local Demo</div>
+    <h2>Gradio And FastAPI Runtime</h2>
     <div class="grid two">
       <div>
-        <p>The demo is stored in <code>project/</code>. It exposes a browser interface and API endpoints using the same runtime pipeline.</p>
-        <p><span class="pill">Upload audio</span><span class="pill">ResNet34 event model</span><span class="pill">Whisper default</span><span class="pill">Optional diarization</span><span class="pill">Optional HF classifiers</span><span class="pill">JSON export</span></p>
-        <table>
-          <thead><tr><th>Route</th><th>Purpose</th></tr></thead>
-          <tbody>
-            <tr><td><code>/gradio</code></td><td>Interactive analysis interface.</td></tr>
-            <tr><td><code>/models</code></td><td>Checkpoint readiness, final metrics, classes, and optional runtime status.</td></tr>
-            <tr><td><code>/health</code></td><td>Service health and model readiness.</td></tr>
-            <tr><td><code>/analyze</code></td><td>POST endpoint for audio upload and JSON analysis.</td></tr>
-          </tbody>
-        </table>
+        <p>The local demo is stored in <code>project/</code>. It exposes a browser interface and API endpoints using the same runtime pipeline and final checkpoint.</p>
+        <p>
+          <span class="pill">Audio upload</span>
+          <span class="pill">ResNet34 event model</span>
+          <span class="pill">Whisper-ready transcription</span>
+          <span class="pill">Optional diarization</span>
+          <span class="pill">Optional HF classifiers</span>
+          <span class="pill">Integrity screen</span>
+          <span class="pill">JSON export</span>
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Route</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td><code>/gradio</code></td><td>Interactive audio analysis interface.</td></tr>
+              <tr><td><code>/models</code></td><td>Checkpoint readiness, final metrics, classes, and optional runtime status.</td></tr>
+              <tr><td><code>/health</code></td><td>Service health and model readiness.</td></tr>
+              <tr><td><code>/analyze</code></td><td>POST endpoint for audio upload and JSON analysis.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+
       <div>
-        <h3>Run command</h3>
-        <div class="tree-block">cd project
-python -m pip install -r requirements.txt
-python app.py</div>
-        <p>Open <code>http://localhost:7860</code>. Set Hugging Face access in <code>project/.env</code>. Optional pyannote and SpeechBrain support can be installed with <code>python -m pip install -r requirements-optional.txt</code>.</p>
+        <h3>Run Command</h3>
+        <div class="schema">
+          <div>cd project</div>
+          <div>python -m pip install -r requirements.txt</div>
+          <div>python app.py</div>
+        </div>
+        <p style="margin-top: 12px;">The demo can also be started with <code>project/run_demo.bat</code>. Optional runtime packages are listed in <code>project/requirements-optional.txt</code>.</p>
       </div>
     </div>
   </section>
 
-  <section>
-    <h2>8. Artifact Map</h2>
-    <table>
-      <thead><tr><th>Artifact</th><th>Path</th><th>Role</th></tr></thead>
-      <tbody>
-        <tr><td>Final checkpoint</td><td><code>project/models/resnet34_final.pt</code></td><td>Model loaded by the local demo.</td></tr>
-        <tr><td>Training notebook</td><td><code>audio_resnet_final_vf.ipynb</code></td><td>Final single-model training notebook.</td></tr>
-        <tr><td>Comparison notebook</td><td><code>audio_model_comparison_vf.ipynb</code></td><td>Model-comparison notebook used before selecting ResNet34.</td></tr>
-        <tr><td>Metrics JSON</td><td><a href="audio_resnet_final_vf/final_metrics.json">audio_resnet_final_vf/final_metrics.json</a></td><td>Final test metrics.</td></tr>
-        <tr><td>Dataset audit</td><td><a href="audio_resnet_final_vf/dataset_audit.json">audio_resnet_final_vf/dataset_audit.json</a></td><td>Sources, class counts, and split counts.</td></tr>
-        <tr><td>Class report</td><td><a href="audio_resnet_final_vf/classification_report.csv">audio_resnet_final_vf/classification_report.csv</a></td><td>Per-class precision, recall, and F1.</td></tr>
-        <tr><td>Top confusions</td><td><a href="audio_resnet_final_vf/top_confusions.csv">audio_resnet_final_vf/top_confusions.csv</a></td><td>Main observed class confusions.</td></tr>
-        <tr><td>XAI manifest</td><td><a href="audio_resnet_final_vf/xai/xai_manifest.json">audio_resnet_final_vf/xai/xai_manifest.json</a></td><td>Grad-CAM and LIME-style image index.</td></tr>
-        <tr><td>Demo app</td><td><code>project/app.py</code></td><td>Gradio and FastAPI entry point.</td></tr>
-        <tr><td>Runtime pipeline</td><td><code>project/pipeline.py</code></td><td>Audio preparation, ResNet34 inference, optional context modules, integrity checks, XAI references, and JSON timeline.</td></tr>
-      </tbody>
-    </table>
+  <section id="artifacts">
+    <div class="section-label">13 / Artifact Map</div>
+    <h2>Files Used By This Documentation</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Artifact</th><th>Path</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td>Comparison notebook</td><td><code>audio_model_comparison_vf.ipynb</code></td><td>Scratch and candidate pretrained model comparison, leaderboard output, and final model selection record.</td></tr>
+          <tr><td>Final training notebook</td><td><code>audio_resnet_final_vf.ipynb</code></td><td>Final ResNet34 training, calibration, evaluation, XAI generation, and export workflow.</td></tr>
+          <tr><td>Final metrics JSON</td><td><a href="audio_resnet_final_vf/final_metrics.json">audio_resnet_final_vf/final_metrics.json</a></td><td>Final test metrics used in the top summary and final metrics table.</td></tr>
+          <tr><td>Final metrics CSV</td><td><a href="audio_resnet_final_vf/final_metrics.csv">audio_resnet_final_vf/final_metrics.csv</a></td><td>CSV copy of the final metric row.</td></tr>
+          <tr><td>Final summary JSON</td><td><a href="audio_resnet_final_vf/final_summary.json">audio_resnet_final_vf/final_summary.json</a></td><td>Final model, metrics, dataset audit, XAI file list, and output path summary from the final notebook.</td></tr>
+          <tr><td>ResNet metrics JSON</td><td><a href="audio_resnet_final_vf/resnet34_final_metrics.json">audio_resnet_final_vf/resnet34_final_metrics.json</a></td><td>Per-model metrics JSON saved with the final ResNet34 run.</td></tr>
+          <tr><td>Training history</td><td><a href="audio_resnet_final_vf/resnet34_final_history.csv">audio_resnet_final_vf/resnet34_final_history.csv</a></td><td>Frozen and full fine-tuning history for loss, training accuracy, validation F1, and learning rates.</td></tr>
+          <tr><td>Dataset audit</td><td><a href="audio_resnet_final_vf/dataset_audit.json">audio_resnet_final_vf/dataset_audit.json</a></td><td>Source counts, raw counts, deduplicated counts, capped counts, class list, and split counts.</td></tr>
+          <tr><td>Classification report</td><td><a href="audio_resnet_final_vf/classification_report.csv">audio_resnet_final_vf/classification_report.csv</a></td><td>Per-class precision, recall, F1, support, accuracy, macro average, and weighted average.</td></tr>
+          <tr><td>Top confusions</td><td><a href="audio_resnet_final_vf/top_confusions.csv">audio_resnet_final_vf/top_confusions.csv</a></td><td>Observed class confusions from the final test output.</td></tr>
+          <tr><td>Dataset split plot</td><td><a href="audio_resnet_final_vf/dataset_split.png">audio_resnet_final_vf/dataset_split.png</a></td><td>Visual summary of train, validation, and test split counts.</td></tr>
+          <tr><td>Learning curve</td><td><a href="audio_resnet_final_vf/learning_curve.png">audio_resnet_final_vf/learning_curve.png</a></td><td>Training loss, training accuracy, and validation macro F1 over the final run.</td></tr>
+          <tr><td>Confusion matrix</td><td><a href="audio_resnet_final_vf/confusion_matrix.png">audio_resnet_final_vf/confusion_matrix.png</a></td><td>Raw and normalized confusion matrix plot from the final run.</td></tr>
+          <tr><td>Calibration plot</td><td><a href="audio_resnet_final_vf/calibration.png">audio_resnet_final_vf/calibration.png</a></td><td>Confidence distribution and calibration curve.</td></tr>
+          <tr><td>Final score summary</td><td><a href="audio_resnet_final_vf/final_score_summary.png">audio_resnet_final_vf/final_score_summary.png</a></td><td>Per-class F1 and final macro F1 summary image.</td></tr>
+          <tr><td>XAI manifest</td><td><a href="audio_resnet_final_vf/xai/xai_manifest.json">audio_resnet_final_vf/xai/xai_manifest.json</a></td><td>Grad-CAM and LIME-style artifact index for each final class.</td></tr>
+          <tr><td>Runtime app</td><td><code>project/app.py</code></td><td>Gradio and FastAPI entry point.</td></tr>
+          <tr><td>Runtime pipeline</td><td><code>project/pipeline.py</code></td><td>Audio loading, segmentation, spectrogram conversion, ResNet34 inference, optional context modules, integrity screen, and JSON output.</td></tr>
+          <tr><td>Runtime requirements</td><td><code>project/requirements.txt</code> and <code>project/requirements-optional.txt</code></td><td>Required and optional packages for the local demo runtime.</td></tr>
+          <tr><td>Runtime helper</td><td><code>project/run_demo.bat</code></td><td>Local launch helper for the demo runtime.</td></tr>
+          <tr><td>Sample audio</td><td><code>project/samples/test1.mp3</code></td><td>Included sample file for local runtime testing.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="footer-note">All values shown on this page are taken from the notebooks and saved files already present in this folder.</p>
   </section>
 </main>
 </body>

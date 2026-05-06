@@ -1,6 +1,8 @@
 import re
 import requests
+import time
 from config import LLM_API_KEY, LLM_BASE_URL, LLM_MODEL, LLM_TIMEOUT, MAX_CONTEXT_CHARS
+from evals import estimate_tokens, provider_name
 
 SYSTEM_PROMPT = """You are a legal document analysis assistant for Tunisian violence-against-women cases.
 Use only the cited context and the extracted document facts provided by the user message.
@@ -21,6 +23,8 @@ class LegalFeedbackEngine:
     def __init__(self):
         self.enabled = bool(LLM_API_KEY)
         self.last_error = ""
+        self.last_metrics = {}
+        self.last_cleaning = {}
     def citation(self, chunk):
         parts = [chunk.get("chunk_id", "")]
         if chunk.get("source_file"):
@@ -29,6 +33,8 @@ class LegalFeedbackEngine:
             parts.append(f"p.{chunk['page']}")
         if chunk.get("element_id") not in [None, ""]:
             parts.append(str(chunk["element_id"]))
+        if chunk.get("region_type") not in [None, ""]:
+            parts.append(str(chunk["region_type"]))
         return " | ".join(parts)
     def context(self, chunks):
         used = 0
@@ -262,13 +268,17 @@ class LegalFeedbackEngine:
             sections.append("- No retrieved legal citation was available.")
         return "\n".join(sections)
     def clean_output(self, text, chunks, question):
+        self.last_cleaning = {"fallback_used": False, "fallback_reason": ""}
         bad = [r"\[insert[^\]]*\]", r"insert article number", r"article number\]", r"\bTBD\b", r"\bTODO\b", r"citation needed", r"\[source\]"]
         if any(re.search(pattern, text, re.IGNORECASE) for pattern in bad):
+            self.last_cleaning = {"fallback_used": True, "fallback_reason": "placeholder_or_draft_text"}
             return self.grounded_template(question, chunks)
         if not any(f"[{chunk.get('chunk_id', '')}]" in text for chunk in chunks if chunk.get("chunk_id")):
+            self.last_cleaning = {"fallback_used": True, "fallback_reason": "missing_retrieved_citation"}
             return self.grounded_template(question, chunks)
         body_before_citations = re.split(r"(?im)^\s*(?:#{1,6}\s*)?(?:\*{0,2})?(?:\d+\.\s*)?citations used(?:\*{0,2})?\s*:?\s*$", text, maxsplit=1)[0]
         if any(self.legal_claim_needs_citation(line) and not self.has_allowed_citation(line, chunks) for line in body_before_citations.splitlines()):
+            self.last_cleaning = {"fallback_used": True, "fallback_reason": "unsupported_legal_claim"}
             return self.grounded_template(question, chunks)
         text = "\n".join(line for line in text.splitlines() if "civil code" not in line.lower())
         cleaned = []
@@ -340,17 +350,69 @@ Rules:
         return res.json()["choices"][0]["message"]["content"].strip()
     def generate(self, question, chunks):
         ctx = self.context(chunks)
+        base = {
+            "enabled": self.enabled,
+            "provider": provider_name(),
+            "model": LLM_MODEL,
+            "base_url": LLM_BASE_URL,
+            "context_chars": len(ctx),
+            "context_estimated_tokens": estimate_tokens(ctx),
+            "question_chars": len(question or ""),
+            "question_estimated_tokens": estimate_tokens(question),
+            "attempted": False,
+            "success": False,
+            "fallback_used": False,
+            "response_mode": "",
+            "latency_ms": 0.0,
+            "output_chars": 0,
+        }
         if self.is_sensitive_disclosure(question):
-            return self.survivor_template(question, chunks)
+            answer = self.survivor_template(question, chunks)
+            self.last_metrics = {**base, "success": True, "fallback_used": True, "response_mode": "survivor_template", "output_chars": len(answer)}
+            return answer
         if not self.enabled:
             self.last_error = "LLM disabled"
-            return self.grounded_template(question, chunks)
+            answer = self.grounded_template(question, chunks)
+            self.last_metrics = {**base, "fallback_used": True, "response_mode": "template_llm_disabled", "output_chars": len(answer), "error": self.last_error}
+            return answer
         prompt = self.prompt(question, ctx)
+        started = time.perf_counter()
         try:
             self.last_error = ""
             if "11434" in LLM_BASE_URL or LLM_API_KEY == "ollama":
-                return self.clean_output(self.generate_ollama(prompt), chunks, question)
-            return self.clean_output(self.generate_openai_compatible(prompt), chunks, question)
+                raw = self.generate_ollama(prompt)
+            else:
+                raw = self.generate_openai_compatible(prompt)
+            answer = self.clean_output(raw, chunks, question)
+            cleaning = dict(self.last_cleaning or {})
+            self.last_metrics = {
+                **base,
+                "attempted": True,
+                "success": True,
+                "fallback_used": bool(cleaning.get("fallback_used")),
+                "fallback_reason": cleaning.get("fallback_reason", ""),
+                "response_mode": "template_after_llm" if cleaning.get("fallback_used") else "llm",
+                "latency_ms": round((time.perf_counter() - started) * 1000, 2),
+                "prompt_chars": len(prompt),
+                "prompt_estimated_tokens": estimate_tokens(prompt),
+                "raw_output_chars": len(raw),
+                "output_chars": len(answer),
+            }
+            return answer
         except Exception as e:
             self.last_error = str(e)
-            return self.grounded_template(question, chunks)
+            answer = self.grounded_template(question, chunks)
+            self.last_metrics = {
+                **base,
+                "attempted": True,
+                "success": False,
+                "fallback_used": True,
+                "fallback_reason": "llm_error",
+                "response_mode": "template_after_llm_error",
+                "latency_ms": round((time.perf_counter() - started) * 1000, 2),
+                "prompt_chars": len(prompt),
+                "prompt_estimated_tokens": estimate_tokens(prompt),
+                "output_chars": len(answer),
+                "error": self.last_error[:500],
+            }
+            return answer

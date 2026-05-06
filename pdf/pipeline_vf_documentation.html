@@ -152,13 +152,18 @@ summary{cursor:pointer;font:900 14px/1.2 Verdana,sans-serif;color:var(--green);l
 <p class="lead">A complete evidence-processing system: pretrained computer vision models extract document context, a local retrieval layer grounds the legal references, and a local language model produces a structured Tunisia-focused legal triage report.</p>
 <div class="nav">
 <a href="#overview">Overview</a>
+<a href="#coverage">Coverage</a>
 <a href="#architecture">Architecture</a>
 <a href="#lineup">Model Lineup</a>
+<a href="#comparison-notebook">Comparison</a>
 <a href="#notebook">Notebook</a>
 <a href="#evaluation">Evaluation</a>
 <a href="#results">Results</a>
 <a href="#rag">RAG</a>
+<a href="#rag-eval">RAG Eval</a>
+<a href="#runtime-project">Runtime</a>
 <a href="#demo">Demo</a>
+<a href="#artifacts">Artifacts</a>
 <a href="#limits">Limits</a>
 </div>
 </div>
@@ -166,7 +171,7 @@ summary{cursor:pointer;font:900 14px/1.2 Verdana,sans-serif;color:var(--green);l
 <div class="kicker">Executive Overview</div>
 <div class="stats">
 <div class="stat"><b>4</b><span>trained models</span></div>
-<div class="stat"><b>65</b><span>result artifacts</span></div>
+<div class="stat"><b>67</b><span>result artifacts</span></div>
 <div class="stat"><b>35,069s</b><span>final runtime</span></div>
 <div class="stat"><b>T4</b><span>Kaggle GPU</span></div>
 </div>
@@ -174,41 +179,60 @@ summary{cursor:pointer;font:900 14px/1.2 Verdana,sans-serif;color:var(--green);l
 </div>
 </section>
 
+<section class="card section" id="coverage">
+<div class="kicker">01 / Coverage Matrix</div>
+<h2>What this folder covers</h2>
+<p>The PDF folder contains the model-comparison notebook, the final production training notebook, the local FastAPI project, saved model outputs, runtime diagnostics, and a formal offline RAG evaluation package.</p>
+<table>
+<tr><th>Folder or file</th><th>Role</th><th>Coverage</th></tr>
+<tr><td><code>document_model_comparison_vf.ipynb</code></td><td>Model-selection notebook</td><td>Compares a scratch CNN, the final VF architecture for each task, and three pretrained baselines. It records the 70 / 15 / 15 split, leaderboard metrics, calibration, confusion matrices, Grad-CAM, perturbation occlusion, and final per-task winner selection.</td></tr>
+<tr><td><code>document-processing-pipeline.ipynb</code></td><td>Final full-run notebook</td><td>Trains the four exported document models with the final configuration, runs evaluation and calibration, builds XAI outputs, defines layout/OCR/captioning/JSON assembly stages, and writes checkpoints plus result artifacts.</td></tr>
+<tr><td><code>project/</code></td><td>Local runtime application</td><td>Loads the exported checkpoints, renders PDFs, extracts layout regions, OCRs where needed, runs visual CNNs, builds document context, retrieves legal references, generates guarded legal reports, and returns runtime metrics.</td></tr>
+<tr><td><code>project/evaluation/</code></td><td>Offline RAG benchmark</td><td>Stores labeled retrieval and guardrail prompts used by <code>evaluate_rag.py</code> to compute Precision@K, Recall@K, Hit Rate@K, MRR@K, nDCG@K, and guardrail accuracy.</td></tr>
+<tr><td><code>results/</code></td><td>Saved evidence package</td><td>Stores comparison JSON/CSV, model card, run manifest, integration schema, training curves, per-model metrics, confusion matrices, calibration plots, local explanation images, and offline RAG eval results.</td></tr>
+</table>
+<div class="grid3">
+<div class="mini"><span class="tag green">Computer vision</span><p>Four trained checkpoints classify content type, evidence role, document quality, and authenticity/tamper status.</p></div>
+<div class="mini"><span class="tag blue">Document parsing</span><p>The runtime keeps page, region, bounding-box, reading-order, text-source, and prediction metadata in the response.</p></div>
+<div class="mini"><span class="tag gold">Legal grounding</span><p>Runtime diagnostics and offline evals now document how RAG and guardrails behave.</p></div>
+</div>
+</section>
+
 <section class="card section" id="architecture">
-<div class="kicker">01 / System Architecture</div>
+<div class="kicker">02 / System Architecture</div>
 <h2>Full pipeline from data to legal report</h2>
 <div class="flow">
 <div class="node"><div class="num">01</div><b>Datasets</b><p>Document, medical, injury, damage, screenshot, handwriting, signature, quality, and tamper sources.</p></div>
 <div class="node"><div class="num">02</div><b>Preprocess</b><p>Label mapping, capping, deduplication, splitting, augmentation, resizing, and ImageNet normalization.</p></div>
 <div class="node"><div class="num">03</div><b>Train</b><p>Frozen-head transfer learning, full fine-tuning, calibration, decision tuning, and checkpoint export.</p></div>
-<div class="node"><div class="num">04</div><b>Analyze</b><p>The local app renders pages, extracts text, OCRs images, and runs all four visual models.</p></div>
-<div class="node"><div class="num">05</div><b>Retrieve</b><p>Local legal references are chunked, indexed, searched, and prioritized for Tunisian law.</p></div>
-<div class="node"><div class="num">06</div><b>Report</b><p>Ollama generates the final legal triage report; guarded fallback returns a cited structured report if needed.</p></div>
+<div class="node"><div class="num">04</div><b>Analyze</b><p>The local app renders pages, extracts layout regions, OCRs visual regions, and runs the CNNs on visual evidence.</p></div>
+<div class="node"><div class="num">05</div><b>Retrieve</b><p>Local legal references are chunked, indexed, searched, and prioritized by detected legal scope.</p></div>
+<div class="node"><div class="num">06</div><b>Report</b><p>Ollama or a deterministic fallback returns a cited legal triage report with runtime metrics and guardrail checks.</p></div>
 </div>
 <h3>Runtime flow inside the demo</h3>
 <table>
 <tr><th>Stage</th><th>What happens</th><th>Why it matters</th></tr>
 <tr><td>Upload</td><td>The user submits a PDF, image, DOCX, TXT, JSON, or XLSX file.</td><td>The system accepts common evidence/document formats.</td></tr>
-<tr><td>Document extraction</td><td>Pages are rendered, native text is extracted, images are OCR-processed when needed, and elements are normalized.</td><td>The legal report receives usable facts rather than raw files.</td></tr>
-<tr><td>Visual model pass</td><td>CNN1, CNN2, CNN3, and CNN4 run on each visual element and produce labels, probabilities, confidence scores, and routing signals.</td><td>The report can state what kind of evidence the document looks like, how strong it is, how readable it is, and what authenticity class was predicted.</td></tr>
-<tr><td>Structured context</td><td>OCR text, extracted facts, content type, evidence role, quality, tamper signal, and source metadata are merged into one document context.</td><td>This becomes the bridge between computer vision and legal reasoning.</td></tr>
-<tr><td>Retrieval</td><td>The law/reference folder is chunked and searched with a Tunisia-focused query expansion.</td><td>The report is grounded in retrieved references instead of unsupported legal claims.</td></tr>
-<tr><td>Legal output</td><td>The answer is generated with required sections: key facts, model review, Tunisian framework, urgent risks, evidence to preserve, evidence gaps, next steps, and citations.</td><td>The final output is organized for legal support preparation, not just classification.</td></tr>
+<tr><td>Document extraction</td><td>PDF pages are rendered to images, layout boxes are produced from the optional Hugging Face detector and native PDF blocks, tables are extracted where available, and OCR is used when text is not native.</td><td>The report receives page, region, bounding-box, text-source, and reading-order context rather than a single flat page string.</td></tr>
+<tr><td>Visual model pass</td><td>CNN1, CNN2, CNN3, and CNN4 run on page previews, embedded images, and visual layout regions. Text and table regions stay text-first unless configured otherwise.</td><td>The report can state what the evidence looks like, how strong it is, how readable it is, and what authenticity class was predicted without over-processing pure text.</td></tr>
+<tr><td>Structured context</td><td>OCR text, native text, layout metadata, extracted facts, content type, evidence role, quality, tamper signal, and source metadata are merged into one document context.</td><td>This is the bridge between document understanding, computer vision, retrieval, and legal report writing.</td></tr>
+<tr><td>Retrieval</td><td>The law/reference folder is chunked and searched with scope-aware expansion for Tunisia, U.S. federal, or international reference questions.</td><td>The report is grounded in retrieved references and avoids forcing Tunisia material into explicitly different legal scopes.</td></tr>
+<tr><td>Legal output</td><td>The answer is generated with required sections, citation checks, unsupported-claim checks, out-of-scope blocking, and run metrics.</td><td>The final output is organized for legal support preparation and can be audited after each run.</td></tr>
 </table>
 </section>
 
 <section class="card section" id="lineup">
-<div class="kicker">02 / Model Lineup</div>
+<div class="kicker">03 / Model Lineup</div>
 <h2>Full model tree and subtrees</h2>
-<p>The key design point is that every uploaded page calls all four CNN models. CNN1 selects the content subtree; CNN2, CNN3, and CNN4 attach evidence role, readability, and authenticity labels. Fusion sends one clean document context to retrieval and reporting.</p>
+<p>The key design point is that the document is decomposed before model routing. Page previews, embedded images, figures, signatures, handwriting, and unknown visual regions can call all four CNN models. Native text, tables, lists, and titles remain text-first unless the configuration explicitly enables CNN use on text regions. CNN1 supplies the content route; CNN2, CNN3, and CNN4 attach evidence role, readability, and authenticity labels. Fusion sends one clean document context to retrieval and reporting.</p>
 <div class="big-tree">
 <div class="stage">
 <div class="stage-title"><b>Input and preprocessing</b><span>one pass</span></div>
 <div class="flow">
 <div class="node"><div class="num">01</div><b>Uploaded file</b><p>PDF, image, DOCX, TXT, JSON, or XLSX.</p></div>
-<div class="node"><div class="num">02</div><b>Page render</b><p>Convert each visual page or element into a model-ready image.</p></div>
-<div class="node"><div class="num">03</div><b>OCR extraction</b><p>Keep native text when available and OCR rendered pages when needed.</p></div>
-<div class="node"><div class="num">04</div><b>Normalize</b><p>Resize, scale, and apply ImageNet normalization for pretrained backbones.</p></div>
+<div class="node"><div class="num">02</div><b>Page render</b><p>Convert PDF pages to rendered images and keep page dimensions for bounding boxes.</p></div>
+<div class="node"><div class="num">03</div><b>Layout and OCR</b><p>Use optional Hugging Face layout detection, native PDF blocks, table extraction, embedded images, and OCR fallback.</p></div>
+<div class="node"><div class="num">04</div><b>Normalize</b><p>Crop visual regions, resize, scale, and apply ImageNet normalization for pretrained backbones.</p></div>
 </div>
 </div>
 <div class="tree-line">&darr;</div>
@@ -250,9 +274,9 @@ summary{cursor:pointer;font:900 14px/1.2 Verdana,sans-serif;color:var(--green);l
 <div class="stage">
 <div class="stage-title"><b>Fusion, retrieval, and report</b><span>one final context</span></div>
 <div class="fusion">
-<div class="merge"><b>Fusion JSON</b><p>OCR text + CNN1 route + CNN2 evidence role + CNN3 readability + CNN4 authenticity + confidence scores + source metadata.</p></div>
-<div class="tree-box"><span class="tag gold">RAG</span><b>Legal retrieval</b><p>Searches the local Tunisia-focused legal reference library and returns cited law/context chunks.</p></div>
-<div class="tree-box"><span class="tag green">Report</span><b>Legal triage output</b><p>Key facts, document model review, Tunisian framework, safety risks, evidence to preserve, evidence gaps, next steps, and citations.</p></div>
+<div class="merge"><b>Fusion JSON</b><p>OCR/native text + bounding boxes + reading order + CNN1 route + CNN2 evidence role + CNN3 readability + CNN4 authenticity + confidence scores + source metadata.</p></div>
+<div class="tree-box"><span class="tag gold">RAG</span><b>Legal retrieval</b><p>Searches the local legal reference library, applies scope-aware prioritization, and returns cited law/context chunks.</p></div>
+<div class="tree-box"><span class="tag green">Report</span><b>Legal triage output</b><p>Key facts, document model review, legal framework, safety risks, evidence to preserve, evidence gaps, next steps, citations, and run metrics.</p></div>
 </div>
 </div>
 </div>
@@ -270,9 +294,37 @@ summary{cursor:pointer;font:900 14px/1.2 Verdana,sans-serif;color:var(--green);l
 </table>
 </section>
 
+<section class="card section" id="comparison-notebook">
+<div class="kicker">04 / Comparison Notebook</div>
+<h2>Scratch, VF architecture, and pretrained candidate comparison</h2>
+<p>The comparison notebook uses a balanced light comparison set for each task, applies the same split and evaluation protocol, and compares the scratch CNN against the final VF architecture and pretrained alternatives. It is used for architecture evidence and side-by-side evaluation, while the final notebook performs the full production training run.</p>
+<div class="grid3">
+<div class="mini"><span class="tag green">Split</span><p>Each comparison task uses a stratified 70 / 15 / 15 train, validation, and test split.</p></div>
+<div class="mini"><span class="tag blue">Metrics</span><p>Accuracy, macro F1, weighted F1, macro AUC OVR, ECE, latency, parameters, and model size are reported.</p></div>
+<div class="mini"><span class="tag gold">XAI</span><p>Grad-CAM and perturbation occlusion are generated for selected comparison outputs.</p></div>
+</div>
+<h3>Comparison notebook task data</h3>
+<table>
+<tr><th>Task</th><th>Comparison samples</th><th>Balanced class counts</th></tr>
+<tr><td>CNN1 content</td><td>1,200</td><td>10 classes with 120 samples each.</td></tr>
+<tr><td>CNN2 evidence</td><td>320</td><td>primary_evidence 160, secondary_evidence 160.</td></tr>
+<tr><td>CNN3 quality</td><td>540</td><td>clear 180, acceptable 180, degraded 180.</td></tr>
+<tr><td>CNN4 tamper</td><td>360</td><td>authentic 180, tampered 180.</td></tr>
+</table>
+<h3>Best comparison winner per task</h3>
+<table>
+<tr><th>Task</th><th>Best comparison architecture</th><th>Final VF architecture tested</th><th>Test macro F1</th><th>Accuracy</th><th>AUC</th><th>ECE</th></tr>
+<tr><td>CNN1 content</td><td>ResNet-18</td><td>VF EfficientNetV2-S + GeM</td><td>0.677</td><td>0.678</td><td>0.948</td><td>0.115</td></tr>
+<tr><td>CNN2 evidence</td><td>EfficientNet-B0</td><td>VF ResNeXt-50</td><td>0.875</td><td>0.875</td><td>0.934</td><td>0.273</td></tr>
+<tr><td>CNN3 quality</td><td>MobileNetV3-Small</td><td>VF EfficientNet-B0</td><td>0.361</td><td>0.370</td><td>0.548</td><td>0.096</td></tr>
+<tr><td>CNN4 tamper</td><td>ResNet-18</td><td>VF EfficientNet-B1</td><td>0.590</td><td>0.593</td><td>0.691</td><td>0.170</td></tr>
+</table>
+<div class="warn"><strong>Interpretation:</strong> the comparison notebook is a controlled architecture comparison on a smaller balanced set. The exported production checkpoints and final metrics come from the full final run documented in the next sections.</div>
+</section>
+
 <section class="card section" id="notebook">
-<div class="kicker">03 / Training Notebook</div>
-<h2>How the final notebook is organized</h2>
+<div class="kicker">05 / Final Training Notebook</div>
+<h2>How the final production notebook is organized</h2>
 <div class="grid3">
 <div class="mini"><span class="tag green">Data controls</span><p>Label mapping, class caps, deduplication, train/validation/test split, and task-safe augmentation reduce leakage and imbalance.</p></div>
 <div class="mini"><span class="tag blue">Transfer learning</span><p>Pretrained backbones are trained in a frozen phase, then fully fine-tuned with smaller backbone learning rates.</p></div>
@@ -287,17 +339,27 @@ summary{cursor:pointer;font:900 14px/1.2 Verdana,sans-serif;color:var(--green);l
 </table>
 <h3>Training strategy</h3>
 <div class="timeline">
+<div class="step"><div>Normalize files</div><p>Standardize PDF, image, office, and structured input handling before model training and downstream JSON assembly.</p></div>
 <div class="step"><div>Frozen phase</div><p>Lock pretrained features and train the new classification head first.</p></div>
 <div class="step"><div>Full fine-tune</div><p>Unfreeze the backbone with a smaller learning rate than the head.</p></div>
 <div class="step"><div>Regularize</div><p>Use AdamW, weight decay, dropout, class weighting, label smoothing, safe MixUp/CutMix, and early stopping.</p></div>
 <div class="step"><div>Calibrate</div><p>Fit temperature scaling on validation logits to improve confidence reliability.</p></div>
 <div class="step"><div>Tune decisions</div><p>Use validation-only threshold or logit-bias tuning, then keep the method only if it improves validation F1.</p></div>
+<div class="step"><div>Assemble pipeline</div><p>Define layout detection, captioning, text extraction, color and similarity checks, JSON assembly, and the end-to-end pipeline orchestrator.</p></div>
 <div class="step"><div>Export</div><p>Save checkpoints, model card, comparison files, learning curves, confusion matrices, calibration plots, local explanations, and integration schema.</p></div>
 </div>
+<h3>Notebook stages included</h3>
+<table>
+<tr><th>Stage group</th><th>Notebook sections</th><th>Purpose</th></tr>
+<tr><td>Training setup</td><td>Dependencies, configuration, previous-run cleanup, imports, dataset scanners, file normalisation.</td><td>Creates a reproducible training and export environment.</td></tr>
+<tr><td>Model training</td><td>Model definitions, evaluation and calibration utilities, two-phase trainer, CNN1, CNN2, CNN3, and CNN4 training.</td><td>Builds the four exported document models.</td></tr>
+<tr><td>Post-training outputs</td><td>Training report, pretrained ensemble boosters, saved metrics, confusion matrices, calibration plots, and XAI outputs.</td><td>Creates the inspection artifacts used by this HTML document.</td></tr>
+<tr><td>Document pipeline</td><td>Layout detection, captioning, text extraction, colour and similarity, JSON assembly, orchestrator, run pipeline, inspect results, download models.</td><td>Defines how model outputs become structured context for downstream RAG and legal feedback.</td></tr>
+</table>
 </section>
 
 <section class="card section" id="evaluation">
-<div class="kicker">04 / Evaluation</div>
+<div class="kicker">06 / Evaluation</div>
 <h2>Final completed run metrics</h2>
 <table>
 <tr><th>Model</th><th>Macro F1</th><th>Accuracy</th><th>AUC</th><th>ECE</th><th>Latency</th><th>Size</th></tr>
@@ -311,6 +373,14 @@ summary{cursor:pointer;font:900 14px/1.2 Verdana,sans-serif;color:var(--green);l
 <div class="mini"><b>Main production model</b><p>CNN1 content reached 0.93751 macro F1 across ten classes and supplies the main visual context.</p></div>
 <div class="mini"><b>Most subjective task</b><p>CNN3 quality is lower because clear, acceptable, and degraded labels overlap naturally.</p></div>
 </div>
+<h3>Per-class highlights</h3>
+<table>
+<tr><th>Model</th><th>Strongest classes</th><th>Main observed boundary</th></tr>
+<tr><td>CNN1 content</td><td>injury_photo F1 1.000, medical_record F1 1.000, screenshot F1 0.99476.</td><td>typed_document, correspondence, and data_chart are the main overlapping text-like classes.</td></tr>
+<tr><td>CNN2 evidence</td><td>primary_evidence F1 0.93868, secondary_evidence F1 0.95760.</td><td>Some secondary evidence is predicted as primary evidence, and some primary evidence is predicted as secondary evidence.</td></tr>
+<tr><td>CNN3 quality</td><td>degraded F1 0.78476, acceptable F1 0.70855, clear F1 0.68159.</td><td>clear and acceptable scans overlap, and acceptable and degraded scans also overlap.</td></tr>
+<tr><td>CNN4 tamper</td><td>authentic F1 0.93785, tampered F1 0.93901.</td><td>The balanced authentic/tampered task has similar error counts in both directions.</td></tr>
+</table>
 <h3>Decision tuning</h3>
 <table>
 <tr><th>Model</th><th>Decision method</th><th>Validation effect</th><th>Reason kept</th></tr>
@@ -322,11 +392,11 @@ summary{cursor:pointer;font:900 14px/1.2 Verdana,sans-serif;color:var(--green);l
 </section>
 
 <section class="card section" id="results">
-<div class="kicker">05 / Result Inspector</div>
+<div class="kicker">07 / Result Inspector</div>
 <h2>Evidence package from the final run</h2>
 <p>The result folder is the proof layer of the project. It contains the metrics, reports, plots, thresholds, decision configs, local explanation examples, manifest, and integration schema needed to inspect the final model behavior.</p>
 <div class="stats">
-<div class="stat"><b>65</b><span>kept result files</span></div>
+<div class="stat"><b>67</b><span>kept result files</span></div>
 <div class="stat"><b>4</b><span>learning curves</span></div>
 <div class="stat"><b>8</b><span>matrix and calibration plots</span></div>
 <div class="stat"><b>24</b><span>local explanation images</span></div>
@@ -338,6 +408,8 @@ summary{cursor:pointer;font:900 14px/1.2 Verdana,sans-serif;color:var(--green);l
 <a href="results/model_comparison.csv">results/model_comparison.csv</a>
 <a href="results/run_manifest.json">results/run_manifest.json</a>
 <a href="results/integration_schema.json">results/integration_schema.json</a>
+<a href="results/rag_offline_eval.json">results/rag_offline_eval.json</a>
+<a href="results/rag_offline_eval.csv">results/rag_offline_eval.csv</a>
 </div>
 
 <h3>Training curves</h3>
@@ -448,7 +520,7 @@ summary{cursor:pointer;font:900 14px/1.2 Verdana,sans-serif;color:var(--green);l
 <h3>Complete result inventory</h3>
 <table>
 <tr><th>Folder</th><th>Files kept for inspection</th></tr>
-<tr><td>results/</td><td><code>model_card.md</code>, <code>model_comparison.csv</code>, <code>model_comparison.json</code>, <code>run_manifest.json</code>, <code>integration_schema.json</code></td></tr>
+<tr><td>results/</td><td><code>model_card.md</code>, <code>model_comparison.csv</code>, <code>model_comparison.json</code>, <code>run_manifest.json</code>, <code>integration_schema.json</code>, <code>rag_offline_eval.json</code>, and <code>rag_offline_eval.csv</code>.</td></tr>
 <tr><td>results/training/</td><td>Four learning curves and four training-history JSON files.</td></tr>
 <tr><td>results/xai/cnn1_content/</td><td>Metrics, classification report, confusion matrix, calibration, thresholds, decision config, six local explanation images, and local explanation JSON.</td></tr>
 <tr><td>results/xai/cnn2_evidence/</td><td>Metrics, classification report, confusion matrix, calibration, thresholds, decision config, six local explanation images, and local explanation JSON.</td></tr>
@@ -458,14 +530,23 @@ summary{cursor:pointer;font:900 14px/1.2 Verdana,sans-serif;color:var(--green);l
 </section>
 
 <section class="card section" id="rag">
-<div class="kicker">06 / RAG And Legal Feedback</div>
+<div class="kicker">08 / RAG And Legal Feedback</div>
 <h2>How legal grounding works</h2>
 <div class="grid2">
-<div class="mini"><span class="tag green">Local legal library</span><p>Legal references live in <code>project/storage/law_knowledge/</code>. The current demo focuses on violence-against-women legal triage with Tunisia references, especially Organic Law No. 58 of 2017.</p></div>
-<div class="mini"><span class="tag blue">Retrieval index</span><p>The app chunks legal references, builds a local retrieval index, expands the query toward Tunisian law, and returns cited source chunks for the answer.</p></div>
-<div class="mini"><span class="tag gold">Document context</span><p>The retrieved legal chunks are combined with extracted facts, OCR text, content route, evidence role, readability label, and authenticity label.</p></div>
-<div class="mini"><span class="tag red">Guarded output</span><p>The final report avoids unsupported article numbers, unsupported codes, and legal overclaims. If the local model is unavailable, a deterministic cited fallback report is returned.</p></div>
+<div class="mini"><span class="tag green">Local legal library</span><p>Legal references live in <code>project/storage/law_knowledge/</code>. The current library covers Tunisia Law No. 58 of 2017, a case-triage checklist, international framework material, and U.S. VAWA reference material.</p></div>
+<div class="mini"><span class="tag blue">Retrieval index</span><p>The app chunks legal references, builds a local TF-IDF index by default, optionally adds FAISS sentence embeddings, and returns ranked cited chunks for the answer.</p></div>
+<div class="mini"><span class="tag gold">Scope routing</span><p>The query guard identifies Tunisia, U.S. federal, international, document-only, blocked, or general scope. Retrieval expansion and source prioritization follow that scope.</p></div>
+<div class="mini"><span class="tag red">Guarded output</span><p>The final report avoids unsupported article numbers, unsupported codes, unrelated answers, prompt-injection requests, and legal overclaims. If Ollama is unavailable, a deterministic cited fallback report is returned.</p></div>
 </div>
+<h3>Runtime RAG and Ollama diagnostics</h3>
+<table>
+<tr><th>Metric group</th><th>What is measured on each run</th></tr>
+<tr><td>Guardrail</td><td>Whether the question is in scope, why it was allowed or blocked, detected scope, matched terms, and prompt-injection detection.</td></tr>
+<tr><td>RAG retrieval</td><td>Retrieval engine, total chunks, returned chunks, legal-reference chunks, document chunks, top score, mean score, source kinds, region types, Tunisia article coverage, and retrieval latency.</td></tr>
+<tr><td>Answer grounding</td><td>Total citations, valid citations, invalid citations, citation precision, legal-claim lines, unsupported legal-claim lines, and placeholder detection.</td></tr>
+<tr><td>Ollama / LLM</td><td>Provider, model, context length, prompt size, whether generation was attempted, success or failure, latency, fallback use, and fallback reason.</td></tr>
+<tr><td>Document extraction</td><td>Page count, extracted element count, text-bearing elements, visual elements classified by CNNs, kind counts, region-type counts, and text-source counts.</td></tr>
+</table>
 <h3>Legal report sections</h3>
 <table>
 <tr><th>Section</th><th>Purpose</th></tr>
@@ -480,37 +561,126 @@ summary{cursor:pointer;font:900 14px/1.2 Verdana,sans-serif;color:var(--green);l
 </table>
 </section>
 
+<section class="card section" id="rag-eval">
+<div class="kicker">09 / Offline RAG Evaluation</div>
+<h2>Gold retrieval and guardrail benchmark</h2>
+<p>The project now includes a labeled offline RAG evaluation set in <code>project/evaluation/rag_eval_dataset.json</code> and a runner in <code>project/evaluate_rag.py</code>. This is separate from runtime diagnostics. It checks whether retrieval returns the expected legal sources and article/topic terms for predefined questions, and whether unrelated or prompt-injection-style requests are blocked.</p>
+<div class="stats">
+<div class="stat"><b>16</b><span>eval prompts</span></div>
+<div class="stat"><b>13</b><span>in-scope retrieval tests</span></div>
+<div class="stat"><b>3</b><span>blocked prompt tests</span></div>
+<div class="stat"><b>16/16</b><span>passed items</span></div>
+</div>
+<h3>Offline benchmark results</h3>
+<table>
+<tr><th>Metric</th><th>Value</th><th>Meaning</th></tr>
+<tr><td>Guardrail accuracy</td><td>1.0000</td><td>All in-scope and out-of-scope prompts were classified correctly.</td></tr>
+<tr><td>Blocked prompt accuracy</td><td>1.0000</td><td>Weather, recipe, and instruction-override prompts were blocked.</td></tr>
+<tr><td>Recall@8</td><td>1.0000</td><td>Every required gold target was retrieved within the top 8 chunks.</td></tr>
+<tr><td>Hit Rate@8</td><td>1.0000</td><td>Every in-scope question retrieved at least one required target by rank 8.</td></tr>
+<tr><td>MRR@8</td><td>0.5462</td><td>The first relevant chunk usually appeared in the upper half of the ranked list.</td></tr>
+<tr><td>nDCG@8</td><td>0.6799</td><td>Relevant chunks were present, with room to improve their exact rank ordering.</td></tr>
+</table>
+<h3>Retrieval metrics by K</h3>
+<table>
+<tr><th>K</th><th>Precision@K</th><th>Recall@K</th><th>Hit Rate@K</th><th>MRR@K</th><th>nDCG@K</th></tr>
+<tr><td>1</td><td>0.3077</td><td>0.2308</td><td>0.2308</td><td>0.3077</td><td>0.3077</td></tr>
+<tr><td>3</td><td>0.4359</td><td>0.5385</td><td>0.5385</td><td>0.4872</td><td>0.5499</td></tr>
+<tr><td>5</td><td>0.4154</td><td>0.8462</td><td>0.8462</td><td>0.5256</td><td>0.6281</td></tr>
+<tr><td>8</td><td>0.2885</td><td>1.0000</td><td>1.0000</td><td>0.5462</td><td>0.6799</td></tr>
+</table>
+<div class="grid2">
+<div class="mini"><span class="tag green">Artifacts</span><p>Full JSON output: <code>results/rag_offline_eval.json</code>. Compact table output: <code>results/rag_offline_eval.csv</code>.</p></div>
+<div class="mini"><span class="tag blue">Generation mode</span><p>The saved benchmark run measures retrieval and guardrails without live Ollama generation for speed and repeatability. The same runner supports <code>python evaluate_rag.py --use-llm</code> when Ollama generation should be included.</p></div>
+</div>
+</section>
+
+<section class="card section" id="runtime-project">
+<div class="kicker">10 / Runtime Project</div>
+<h2>How the local project executes the pipeline</h2>
+<p>The runtime project is the operational version of the notebook work. It loads the exported checkpoints, performs layout-aware document extraction, routes visual regions through the CNNs, builds structured context, retrieves legal references, and returns the legal report with diagnostics.</p>
+<h3>Runtime module map</h3>
+<table>
+<tr><th>Module</th><th>Responsibility</th></tr>
+<tr><td><code>main.py</code></td><td>FastAPI app, browser UI, upload endpoint, chat endpoint, model status endpoint, and reload endpoint.</td></tr>
+<tr><td><code>document_io.py</code></td><td>PDF rendering, native text extraction, table extraction, image extraction, OCR fallback, layout-region records, DOCX/TXT/JSON/XLSX/image reading.</td></tr>
+<tr><td><code>layout_detector.py</code></td><td>Optional Hugging Face object-detection layout model controlled by <code>LAYOUT_MODEL_ID</code>.</td></tr>
+<tr><td><code>model_loader.py</code></td><td>Loads CNN1, CNN2, CNN3, and CNN4 checkpoints, applies transforms, TTA, temperature values, thresholds, and returns probabilities.</td></tr>
+<tr><td><code>pipeline.py</code></td><td>End-to-end document analysis: extraction, visual classification, document context assembly, scope-aware retrieval, legal generation, metrics, and saved JSON output.</td></tr>
+<tr><td><code>rag.py</code></td><td>Chunking, TF-IDF retrieval, optional FAISS embeddings, reciprocal-rank fusion, retrieval score storage, and chunk metadata preservation.</td></tr>
+<tr><td><code>legal_feedback.py</code></td><td>Ollama or compatible API prompting, grounded fallback templates, citation checks, legal-claim cleaning, safety-sensitive response handling, and LLM diagnostics.</td></tr>
+<tr><td><code>evals.py</code></td><td>Runtime guardrail checks, retrieval diagnostics, answer-grounding metrics, document-extraction metrics, and quality flags.</td></tr>
+<tr><td><code>evaluate_rag.py</code></td><td>Offline benchmark runner for labeled RAG and guardrail evaluation.</td></tr>
+<tr><td><code>schemas.py</code></td><td>API response schemas for models, retrieved chunks, analysis output, chat output, warnings, and metrics.</td></tr>
+</table>
+<h3>Key runtime controls</h3>
+<table>
+<tr><th>Setting</th><th>Current role</th></tr>
+<tr><td><code>PDF_RENDER_SCALE</code></td><td>Controls PDF page render resolution before layout extraction and CNN crops.</td></tr>
+<tr><td><code>LAYOUT_ENABLED</code></td><td>Enables layout-aware region extraction.</td></tr>
+<tr><td><code>LAYOUT_MODEL_ID</code></td><td>Activates the optional Hugging Face layout detector when a model id is provided.</td></tr>
+<tr><td><code>CNN_TEXT_REGIONS</code></td><td>Controls whether text/table/list/title regions are also sent through CNN classification.</td></tr>
+<tr><td><code>RAG_EMBEDDINGS</code></td><td>Uses sentence-transformer embeddings and FAISS when enabled and installed; otherwise TF-IDF remains the default.</td></tr>
+<tr><td><code>LLM_BASE_URL</code>, <code>LLM_API_KEY</code>, <code>LLM_MODEL</code></td><td>Control Ollama or OpenAI-compatible generation. Ollama is the local default path.</td></tr>
+<tr><td><code>TOP_K</code>, <code>POOL_K</code>, <code>MAX_CONTEXT_CHARS</code></td><td>Control retrieval size and prompt context length.</td></tr>
+</table>
+<div class="good"><strong>Current behavior:</strong> the project now supports the full layout-aware PDF flow and preserves region metadata in both the document output and the RAG chunks. The Hugging Face layout detector is available when configured; otherwise native PDF blocks, table extraction, embedded images, and OCR fallback still run.</div>
+</section>
+
 <section class="card section" id="demo">
-<div class="kicker">07 / Local Demo</div>
+<div class="kicker">11 / Local Demo</div>
 <h2>How the website uses the trained models</h2>
 <div class="flow">
 <div class="node"><div class="num">01</div><b>Upload</b><p>PDF, image, DOCX, TXT, JSON, or XLSX evidence files.</p></div>
-<div class="node"><div class="num">02</div><b>Normalize</b><p>Render pages or extract native text into processable elements.</p></div>
-<div class="node"><div class="num">03</div><b>Classify</b><p>Run content, evidence, quality, and tamper models on visual elements.</p></div>
-<div class="node"><div class="num">04</div><b>Extract</b><p>Collect OCR text, predictions, confidence scores, and model labels.</p></div>
-<div class="node"><div class="num">05</div><b>Retrieve</b><p>Search local legal references and prioritize Tunisia-focused material.</p></div>
-<div class="node"><div class="num">06</div><b>Report</b><p>Return clean legal triage cards in the browser.</p></div>
+<div class="node"><div class="num">02</div><b>Segment</b><p>Render PDF pages, extract layout regions, native text, tables, images, and OCR text.</p></div>
+<div class="node"><div class="num">03</div><b>Classify</b><p>Run content, evidence, quality, and tamper models on visual elements and page previews.</p></div>
+<div class="node"><div class="num">04</div><b>Assemble</b><p>Collect text, predictions, confidence scores, region metadata, and reading order.</p></div>
+<div class="node"><div class="num">05</div><b>Retrieve</b><p>Search local legal references with the detected legal scope and return cited chunks.</p></div>
+<div class="node"><div class="num">06</div><b>Report</b><p>Return clean legal triage cards and run metrics in the browser.</p></div>
 </div>
 <h3>Backend payload fields</h3>
 <table>
 <tr><th>Field</th><th>Meaning</th></tr>
-<tr><td>content_type / content_scores</td><td>Main document or evidence type and full probability distribution.</td></tr>
-<tr><td>evid_weight / evid_scores</td><td>Primary versus secondary evidence role.</td></tr>
-<tr><td>quality / quality_usability</td><td>Clear, acceptable, or degraded quality plus usability guidance.</td></tr>
-<tr><td>tamper_prob / tamper_label</td><td>Authenticity-screening probability and predicted class.</td></tr>
-<tr><td>text / caption</td><td>OCR text and visual description used by the retrieval and report layer.</td></tr>
-<tr><td>ambiguous_content</td><td>Flag for close text-like predictions where cautious downstream handling is needed.</td></tr>
+<tr><td>document.pages</td><td>Per-page region summaries with region type, bounding box, layout confidence, text source, reading order, and prediction presence.</td></tr>
+<tr><td>document.elements</td><td>Normalized document elements containing extracted text, source file, page, kind, region type, bbox, OCR/native text source, and model outputs.</td></tr>
+<tr><td>document.elements[].predictions</td><td>CNN1 content, CNN2 evidence role, CNN3 quality, and CNN4 tamper predictions where a visual region was classified.</td></tr>
+<tr><td>retrieved</td><td>Ranked RAG chunks with chunk ID, source file, page or element, region metadata, score, and cited text.</td></tr>
+<tr><td>metrics.guardrail</td><td>In-scope decision, reason, scope, matched terms, and prompt-injection flag.</td></tr>
+<tr><td>metrics.rag</td><td>Runtime retrieval diagnostics: engine, chunks, legal/document split, score summary, source kinds, article coverage, and latency.</td></tr>
+<tr><td>metrics.answer_grounding</td><td>Citation validity, citation precision, unsupported legal-claim count, and placeholder detection.</td></tr>
+<tr><td>metrics.llm</td><td>Ollama or compatible model status, generation attempt, success, fallback use, latency, and prompt/context size.</td></tr>
 </table>
 <div class="code">Run local demo from the pdf/ root:
 cd project
 run_ollama.cmd
+python evaluate_rag.py
 
 Open:
 http://localhost:8000/</div>
 </section>
 
+<section class="card section" id="artifacts">
+<div class="kicker">12 / Artifact Map</div>
+<h2>Files used by this documentation</h2>
+<table>
+<tr><th>Artifact</th><th>Path</th><th>Role</th></tr>
+<tr><td>Comparison notebook</td><td><code>document_model_comparison_vf.ipynb</code></td><td>Scratch, final VF, and pretrained architecture comparison for the four document tasks.</td></tr>
+<tr><td>Final production notebook</td><td><code>document-processing-pipeline.ipynb</code></td><td>Final training, calibration, XAI, layout, OCR, JSON assembly, pipeline orchestration, and checkpoint export.</td></tr>
+<tr><td>Model comparison JSON</td><td><a href="results/model_comparison.json">results/model_comparison.json</a></td><td>Final run metric table used for the model summary and evaluation table.</td></tr>
+<tr><td>Model comparison CSV</td><td><a href="results/model_comparison.csv">results/model_comparison.csv</a></td><td>CSV copy of the final model comparison metrics.</td></tr>
+<tr><td>Run manifest</td><td><a href="results/run_manifest.json">results/run_manifest.json</a></td><td>Pipeline name, class definitions, model metadata, output list, and integration outputs.</td></tr>
+<tr><td>Integration schema</td><td><a href="results/integration_schema.json">results/integration_schema.json</a></td><td>Element schema and RAG payload structure for the document-to-legal-feedback handoff.</td></tr>
+<tr><td>Offline RAG eval JSON</td><td><a href="results/rag_offline_eval.json">results/rag_offline_eval.json</a></td><td>Full offline benchmark output with per-item retrieval and guardrail details.</td></tr>
+<tr><td>Offline RAG eval CSV</td><td><a href="results/rag_offline_eval.csv">results/rag_offline_eval.csv</a></td><td>Compact table of the offline RAG metrics.</td></tr>
+<tr><td>CNN metrics and XAI folders</td><td><code>results/xai/cnn1_content/</code> through <code>results/xai/cnn4_tamper/</code></td><td>Metrics JSON, classification reports, confusion matrices, calibration plots, thresholds, decision configs, and local explanation examples.</td></tr>
+<tr><td>Runtime app</td><td><code>project/main.py</code></td><td>FastAPI and browser interface for document analysis and legal-reference chat.</td></tr>
+<tr><td>Runtime pipeline</td><td><code>project/pipeline.py</code></td><td>Layout-aware document analysis, visual routing, RAG, legal report generation, and metrics assembly.</td></tr>
+<tr><td>Offline eval runner</td><td><code>project/evaluate_rag.py</code></td><td>Computes formal RAG and guardrail metrics from the labeled dataset.</td></tr>
+</table>
+</section>
+
 <section class="card section" id="limits">
-<div class="kicker">08 / Reliability Boundaries</div>
+<div class="kicker">13 / Reliability Boundaries</div>
 <h2>What the system can and cannot claim</h2>
 <div class="grid2">
 <div class="mini"><span class="tag green">Reliable for</span><p>Structured document context, evidence type separation, scan-quality labeling, authenticity screening, visual explainability artifacts, and local retrieval input.</p></div>
@@ -520,15 +690,16 @@ http://localhost:8000/</div>
 <h3>Final deliverables</h3>
 <table>
 <tr><th>Artifact</th><th>Location / name</th></tr>
-<tr><td>Notebook</td><td><code>document-processing-pipeline.ipynb</code></td></tr>
+<tr><td>Notebooks</td><td><code>document_model_comparison_vf.ipynb</code> and <code>document-processing-pipeline.ipynb</code></td></tr>
 <tr><td>Checkpoints</td><td><code>cnn1_content.pt</code>, <code>cnn2_evidence.pt</code>, <code>cnn3_quality.pt</code>, <code>cnn4_tamper.pt</code></td></tr>
 <tr><td>Results</td><td><code>results/</code></td></tr>
+<tr><td>Offline RAG eval</td><td><code>project/evaluation/rag_eval_dataset.json</code>, <code>project/evaluate_rag.py</code>, <code>results/rag_offline_eval.json</code>, and <code>results/rag_offline_eval.csv</code></td></tr>
 <tr><td>Documentation</td><td><code>pipeline_vf_documentation.html</code></td></tr>
 <tr><td>Local app</td><td><code>project/</code></td></tr>
 </table>
 </section>
 
-<div class="footer">Final production documentation: selected run completed in 35,069 seconds and exported all four model checkpoints plus the full inspection package.</div>
+<div class="footer">Final production documentation: selected run completed in 35,069 seconds, exported all four model checkpoints, and now includes runtime RAG diagnostics plus the offline RAG evaluation package.</div>
 </main>
 </body>
 </html>
