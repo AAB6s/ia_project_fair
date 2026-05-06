@@ -1,0 +1,15 @@
+{
+  "type": "logit_bias",
+  "bias": [
+    -0.12,
+    0.0,
+    -0.04
+  ],
+  "base_val_f1": 0.711047,
+  "decision_val_f1": 0.714816,
+  "class_names": [
+    "clear",
+    "acceptable",
+    "degraded"
+  ]
+}

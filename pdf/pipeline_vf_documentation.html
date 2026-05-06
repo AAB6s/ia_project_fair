@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Document Evidence Pipeline VF</title>
+<style>
+:root{
+  --paper:#fffdf6;
+  --ink:#15201b;
+  --muted:#64716b;
+  --line:#d7d0c2;
+  --green:#214f42;
+  --green2:#dfebe4;
+  --blue:#265b79;
+  --blue2:#dfe9ef;
+  --gold:#916a18;
+  --gold2:#f3e7c4;
+  --red:#893832;
+  --red2:#f1dbd7;
+  --dark:#101815;
+  --shadow:0 24px 70px rgba(28,32,28,.13);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--ink);
+  font-family:Aptos,"Segoe UI",Verdana,sans-serif;
+  line-height:1.62;
+  background:
+    radial-gradient(circle at 8% 7%,rgba(33,79,66,.18),transparent 28%),
+    radial-gradient(circle at 88% 0,rgba(145,106,24,.17),transparent 24%),
+    linear-gradient(135deg,#e8efe8 0,#f5eddf 48%,#dfd0bd 100%);
+}
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(16,24,21,.035) 1px,transparent 1px),
+    linear-gradient(rgba(16,24,21,.035) 1px,transparent 1px);
+  background-size:42px 42px;
+}
+a{color:var(--green);text-decoration:none}
+p{margin:0 0 13px;color:var(--muted)}
+strong{color:var(--ink)}
+code{font-family:Consolas,"Courier New",monospace}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;letter-spacing:-.04em}
+h1{font-size:clamp(42px,7vw,84px);line-height:.88;margin:14px 0 16px}
+h2{font-size:clamp(28px,4vw,48px);line-height:1;margin:0 0 18px}
+h3{font-size:24px;line-height:1.1;margin:26px 0 10px}
+.wrap{position:relative;max-width:1220px;margin:auto;padding:34px 22px 72px}
+.card{background:rgba(255,253,246,.92);border:1px solid var(--line);border-radius:30px;box-shadow:var(--shadow);padding:26px}
+.section{margin-top:22px}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:stretch}
+.kicker{font:900 11px/1.2 Verdana,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--green)}
+.lead{font-size:18px;color:var(--muted);max-width:850px}
+.nav{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.nav a,.pill{border:1px solid var(--line);border-radius:999px;background:#fbf8ee;color:#30413b;padding:9px 12px;font:900 12px/1 Verdana,sans-serif}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+.stat{background:var(--dark);color:#f8f0df;border-radius:19px;padding:18px;min-height:100px}
+.stat b{display:block;font:900 30px/1 Georgia,serif;color:#fff}
+.stat span{display:block;margin-top:8px;font:900 11px/1.35 Verdana,sans-serif;color:#cdd5cd;text-transform:uppercase;letter-spacing:.08em}
+.flow{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.node{border:1px solid var(--line);border-radius:18px;background:var(--paper);padding:15px;min-height:132px}
+.node .num{font:900 11px/1 Verdana,sans-serif;color:var(--green);letter-spacing:.12em}
+.node b{display:block;margin:8px 0 6px}
+.node p{font-size:13px;margin:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mini{border:1px solid var(--line);border-radius:22px;background:#fbf8ee;padding:17px}
+.mini b{display:block;margin-bottom:6px}
+.tag{display:inline-flex;align-items:center;border-radius:999px;padding:6px 9px;font:900 10px/1 Verdana,sans-serif;letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px}
+.green{background:var(--green2);color:var(--green)}
+.blue{background:var(--blue2);color:var(--blue)}
+.gold{background:var(--gold2);color:var(--gold)}
+.red{background:var(--red2);color:var(--red)}
+.good{background:var(--green2);border-left:5px solid var(--green);border-radius:16px;padding:16px;margin:14px 0}
+.warn{background:var(--gold2);border-left:5px solid var(--gold);border-radius:16px;padding:16px;margin:14px 0}
+.code{font-family:Consolas,"Courier New",monospace;background:#111917;color:#f8f0df;border-radius:18px;padding:16px;white-space:pre-wrap;overflow:auto}
+table{width:100%;border-collapse:separate;border-spacing:0;margin:14px 0;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:var(--paper)}
+th{background:#ebe3d4;text-align:left;color:#4d5a55;font:900 11px/1.2 Verdana,sans-serif;text-transform:uppercase;letter-spacing:.08em;padding:13px}
+td{padding:13px;border-top:1px solid var(--line);color:#4c5a55;vertical-align:top}
+td:first-child{color:var(--ink);font-weight:900}
+.score{display:flex;align-items:center;gap:10px}
+.bar{height:8px;border-radius:999px;background:var(--green)}
+.timeline{display:grid;gap:12px}
+.step{display:grid;grid-template-columns:165px 1fr;gap:14px;align-items:start}
+.step div:first-child{font:900 12px/1 Verdana,sans-serif;color:var(--green);text-transform:uppercase;letter-spacing:.1em}
+.tree{display:grid;gap:12px}
+.tree-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:stretch}
+.tree-box{border:1px solid var(--line);background:#fbf8ee;border-radius:20px;padding:16px}
+.tree-box b{display:block;margin-bottom:6px}
+.merge{background:var(--dark);color:#f8f0df;border-radius:20px;padding:18px}
+.merge p{color:#dbe3db}
+.big-tree{display:grid;gap:14px;margin-top:18px}
+.stage{border:1px dashed var(--line);border-radius:26px;padding:17px;background:rgba(251,248,238,.72)}
+.stage-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.stage-title b{font-family:Georgia,"Times New Roman",serif;font-size:24px;letter-spacing:-.03em}
+.stage-title span{font:900 11px/1 Verdana,sans-serif;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.tree-line{display:grid;grid-template-columns:1fr;justify-items:center;color:var(--muted);font:900 22px/1 Verdana,sans-serif}
+.stage .flow{grid-template-columns:repeat(4,1fr)}
+.model-bank{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.model-call{border:1px solid var(--line);border-radius:20px;padding:15px;background:white;min-height:150px}
+.model-call b{display:block;margin:3px 0 7px}
+.model-call p{font-size:13px;margin:0}
+.route-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.route{border:1px solid var(--line);border-radius:18px;background:white;padding:13px}
+.route b{display:block;margin-bottom:4px;font-size:14px}
+.route p{font-size:12px;margin:0}
+.side-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.fusion{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px}
+.fusion .merge{min-height:145px}
+.artifact-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.artifact{border:1px solid var(--line);background:#fbf8ee;border-radius:22px;padding:14px;overflow:hidden}
+.artifact img{width:100%;border-radius:15px;border:1px solid var(--line);background:white;display:block}
+.artifact b{display:block;margin:10px 0 5px}
+.artifact p{font-size:13px}
+.artifact-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.artifact-links a{display:inline-flex;border:1px solid var(--line);border-radius:999px;background:white;padding:7px 9px;font:900 10px/1 Verdana,sans-serif;color:var(--green)}
+details{border:1px solid var(--line);border-radius:24px;background:#fbf8ee;margin:12px 0;padding:15px}
+summary{cursor:pointer;font:900 14px/1.2 Verdana,sans-serif;color:var(--green);letter-spacing:.03em}
+.thumb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.thumb-grid img{width:100%;border-radius:14px;border:1px solid var(--line);background:white}
+.filelist{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.filelist a{border:1px solid var(--line);border-radius:14px;background:#fff;padding:10px 11px;font:900 11px/1.3 Verdana,sans-serif;color:#30413b}
+.footer{margin-top:26px;text-align:center;color:var(--muted);font-size:13px}
+@media(max-width:980px){
+  .hero,.grid2,.grid3,.artifact-grid,.filelist,.tree-row,.model-bank,.route-grid,.side-grid,.fusion{grid-template-columns:1fr}
+  .flow{grid-template-columns:1fr 1fr}
+  .stage .flow{grid-template-columns:1fr 1fr}
+  .stats{grid-template-columns:1fr 1fr}
+  .step{grid-template-columns:1fr}
+  .thumb-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .flow,.stats,.thumb-grid{grid-template-columns:1fr}
+  .stage .flow{grid-template-columns:1fr}
+  .wrap{padding:20px 12px 48px}
+  .card{padding:20px}
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="hero">
+<div class="card">
+<div class="kicker">Final VF Documentation</div>
+<h1>Document evidence and legal context pipeline</h1>
+<p class="lead">A complete evidence-processing system: pretrained computer vision models extract document context, a local retrieval layer grounds the legal references, and a local language model produces a structured Tunisia-focused legal triage report.</p>
+<div class="nav">
+<a href="#overview">Overview</a>
+<a href="#architecture">Architecture</a>
+<a href="#lineup">Model Lineup</a>
+<a href="#notebook">Notebook</a>
+<a href="#evaluation">Evaluation</a>
+<a href="#results">Results</a>
+<a href="#rag">RAG</a>
+<a href="#demo">Demo</a>
+<a href="#limits">Limits</a>
+</div>
+</div>
+<div class="card" id="overview">
+<div class="kicker">Executive Overview</div>
+<div class="stats">
+<div class="stat"><b>4</b><span>trained models</span></div>
+<div class="stat"><b>65</b><span>result artifacts</span></div>
+<div class="stat"><b>35,069s</b><span>final runtime</span></div>
+<div class="stat"><b>T4</b><span>Kaggle GPU</span></div>
+</div>
+<div class="good"><strong>Final system:</strong> the notebook trains and exports four document models; the local app loads those checkpoints, analyzes uploaded documents, retrieves relevant Tunisia legal references, and returns a grounded report with facts, risks, evidence gaps, next steps, citations, and model-review signals.</div>
+</div>
+</section>
+
+<section class="card section" id="architecture">
+<div class="kicker">01 / System Architecture</div>
+<h2>Full pipeline from data to legal report</h2>
+<div class="flow">
+<div class="node"><div class="num">01</div><b>Datasets</b><p>Document, medical, injury, damage, screenshot, handwriting, signature, quality, and tamper sources.</p></div>
+<div class="node"><div class="num">02</div><b>Preprocess</b><p>Label mapping, capping, deduplication, splitting, augmentation, resizing, and ImageNet normalization.</p></div>
+<div class="node"><div class="num">03</div><b>Train</b><p>Frozen-head transfer learning, full fine-tuning, calibration, decision tuning, and checkpoint export.</p></div>
+<div class="node"><div class="num">04</div><b>Analyze</b><p>The local app renders pages, extracts text, OCRs images, and runs all four visual models.</p></div>
+<div class="node"><div class="num">05</div><b>Retrieve</b><p>Local legal references are chunked, indexed, searched, and prioritized for Tunisian law.</p></div>
+<div class="node"><div class="num">06</div><b>Report</b><p>Ollama generates the final legal triage report; guarded fallback returns a cited structured report if needed.</p></div>
+</div>
+<h3>Runtime flow inside the demo</h3>
+<table>
+<tr><th>Stage</th><th>What happens</th><th>Why it matters</th></tr>
+<tr><td>Upload</td><td>The user submits a PDF, image, DOCX, TXT, JSON, or XLSX file.</td><td>The system accepts common evidence/document formats.</td></tr>
+<tr><td>Document extraction</td><td>Pages are rendered, native text is extracted, images are OCR-processed when needed, and elements are normalized.</td><td>The legal report receives usable facts rather than raw files.</td></tr>
+<tr><td>Visual model pass</td><td>CNN1, CNN2, CNN3, and CNN4 run on each visual element and produce labels, probabilities, confidence scores, and routing signals.</td><td>The report can state what kind of evidence the document looks like, how strong it is, how readable it is, and what authenticity class was predicted.</td></tr>
+<tr><td>Structured context</td><td>OCR text, extracted facts, content type, evidence role, quality, tamper signal, and source metadata are merged into one document context.</td><td>This becomes the bridge between computer vision and legal reasoning.</td></tr>
+<tr><td>Retrieval</td><td>The law/reference folder is chunked and searched with a Tunisia-focused query expansion.</td><td>The report is grounded in retrieved references instead of unsupported legal claims.</td></tr>
+<tr><td>Legal output</td><td>The answer is generated with required sections: key facts, model review, Tunisian framework, urgent risks, evidence to preserve, evidence gaps, next steps, and citations.</td><td>The final output is organized for legal support preparation, not just classification.</td></tr>
+</table>
+</section>
+
+<section class="card section" id="lineup">
+<div class="kicker">02 / Model Lineup</div>
+<h2>Full model tree and subtrees</h2>
+<p>The key design point is that every uploaded page calls all four CNN models. CNN1 selects the content subtree; CNN2, CNN3, and CNN4 attach evidence role, readability, and authenticity labels. Fusion sends one clean document context to retrieval and reporting.</p>
+<div class="big-tree">
+<div class="stage">
+<div class="stage-title"><b>Input and preprocessing</b><span>one pass</span></div>
+<div class="flow">
+<div class="node"><div class="num">01</div><b>Uploaded file</b><p>PDF, image, DOCX, TXT, JSON, or XLSX.</p></div>
+<div class="node"><div class="num">02</div><b>Page render</b><p>Convert each visual page or element into a model-ready image.</p></div>
+<div class="node"><div class="num">03</div><b>OCR extraction</b><p>Keep native text when available and OCR rendered pages when needed.</p></div>
+<div class="node"><div class="num">04</div><b>Normalize</b><p>Resize, scale, and apply ImageNet normalization for pretrained backbones.</p></div>
+</div>
+</div>
+<div class="tree-line">&darr;</div>
+<div class="stage">
+<div class="stage-title"><b>Parallel model calls</b><span>all four run</span></div>
+<div class="model-bank">
+<div class="model-call"><span class="tag green">CNN1</span><b>Content type</b><p>EfficientNetV2-S + GeM. Chooses the main content route for the page.</p></div>
+<div class="model-call"><span class="tag blue">CNN2</span><b>Evidence role</b><p>ResNeXt-50 plus CNN1 embedding. Labels primary evidence or secondary evidence.</p></div>
+<div class="model-call"><span class="tag gold">CNN3</span><b>Readability</b><p>EfficientNet-B0. Labels clear, acceptable, or degraded.</p></div>
+<div class="model-call"><span class="tag red">CNN4</span><b>Authenticity class</b><p>EfficientNet-B1. Labels authentic or tampered.</p></div>
+</div>
+</div>
+<div class="tree-line">&darr;</div>
+<div class="stage">
+<div class="stage-title"><b>CNN1 content subtree</b><span>route selected by content label</span></div>
+<div class="route-grid">
+<div class="route"><b>typed_document</b><p>Use OCR text as the main fact source: parties, dates, clauses, requests, incidents.</p></div>
+<div class="route"><b>correspondence</b><p>Extract sender, receiver, date, demands, threats, admissions, and reply history.</p></div>
+<div class="route"><b>screenshot</b><p>Extract account names, timestamps, message text, call logs, platform, and sender clues.</p></div>
+<div class="route"><b>signature_stamp</b><p>Focus on identity mark, stamp/signature location, document authority, and source link.</p></div>
+<div class="route"><b>injury_photo</b><p>Connect visual harm evidence with date, body area, medical records, and incident timeline.</p></div>
+<div class="route"><b>medical_record</b><p>Extract medical dates, injury notes, treatment context, institution, and privacy-sensitive facts.</p></div>
+<div class="route"><b>data_chart</b><p>Extract rows, amounts, dates, repeated patterns, totals, and table-based evidence.</p></div>
+<div class="route"><b>scene_damage</b><p>Capture place, damage type, date clues, objects, scene context, and supporting witnesses.</p></div>
+<div class="route"><b>handwritten</b><p>Use OCR carefully and preserve handwritten names, dates, statements, and signatures.</p></div>
+<div class="route"><b>irrelevant</b><p>Keep only if it connects to the case timeline, identity, location, or evidence package.</p></div>
+</div>
+</div>
+<div class="tree-line">&darr;</div>
+<div class="stage">
+<div class="stage-title"><b>Side labels attached to the same page</b><span>from CNN2 / CNN3 / CNN4</span></div>
+<div class="side-grid">
+<div class="tree-box"><span class="tag blue">CNN2</span><b>Evidence role</b><p>primary_evidence means direct case material. secondary_evidence means supporting context.</p></div>
+<div class="tree-box"><span class="tag gold">CNN3</span><b>Readability label</b><p>clear, acceptable, or degraded controls how strongly the extracted text should be trusted.</p></div>
+<div class="tree-box"><span class="tag red">CNN4</span><b>Authenticity label</b><p>authentic or tampered is stored as a screening output for the final document context.</p></div>
+</div>
+</div>
+<div class="tree-line">&darr;</div>
+<div class="stage">
+<div class="stage-title"><b>Fusion, retrieval, and report</b><span>one final context</span></div>
+<div class="fusion">
+<div class="merge"><b>Fusion JSON</b><p>OCR text + CNN1 route + CNN2 evidence role + CNN3 readability + CNN4 authenticity + confidence scores + source metadata.</p></div>
+<div class="tree-box"><span class="tag gold">RAG</span><b>Legal retrieval</b><p>Searches the local Tunisia-focused legal reference library and returns cited law/context chunks.</p></div>
+<div class="tree-box"><span class="tag green">Report</span><b>Legal triage output</b><p>Key facts, document model review, Tunisian framework, safety risks, evidence to preserve, evidence gaps, next steps, and citations.</p></div>
+</div>
+</div>
+</div>
+<h3>Case routes in one line</h3>
+<table>
+<tr><th>CNN1 output</th><th>Subtree used by the pipeline</th><th>What reaches the final report</th></tr>
+<tr><td>typed_document / correspondence</td><td>Text evidence branch</td><td>Names, dates, relationship, threats, requests, legal facts, and timeline.</td></tr>
+<tr><td>screenshot</td><td>Digital evidence branch</td><td>Messages, timestamps, account identifiers, call activity, and platform context.</td></tr>
+<tr><td>signature_stamp</td><td>Authority mark branch</td><td>Signature/stamp presence, source document role, identity clues, and supporting value.</td></tr>
+<tr><td>injury_photo / medical_record</td><td>Harm and medical branch</td><td>Injury context, medical references, dates, privacy-sensitive facts, and safety relevance.</td></tr>
+<tr><td>data_chart</td><td>Structured evidence branch</td><td>Tables, totals, repeated events, financial patterns, or quantitative proof.</td></tr>
+<tr><td>scene_damage</td><td>Physical context branch</td><td>Location clues, damage type, incident context, and possible witness support.</td></tr>
+<tr><td>handwritten</td><td>Handwritten text branch</td><td>Readable names, dates, statements, signatures, and OCR confidence context.</td></tr>
+<tr><td>irrelevant</td><td>Low-priority branch</td><td>Only kept if it supports identity, location, timeline, or document grouping.</td></tr>
+</table>
+</section>
+
+<section class="card section" id="notebook">
+<div class="kicker">03 / Training Notebook</div>
+<h2>How the final notebook is organized</h2>
+<div class="grid3">
+<div class="mini"><span class="tag green">Data controls</span><p>Label mapping, class caps, deduplication, train/validation/test split, and task-safe augmentation reduce leakage and imbalance.</p></div>
+<div class="mini"><span class="tag blue">Transfer learning</span><p>Pretrained backbones are trained in a frozen phase, then fully fine-tuned with smaller backbone learning rates.</p></div>
+<div class="mini"><span class="tag gold">Reliability layer</span><p>EMA comparison, temperature scaling, validation-only decision tuning, and calibration metrics are included before export.</p></div>
+</div>
+<table>
+<tr><th>Task</th><th>Final split</th><th>Notes</th></tr>
+<tr><td>CNN1 content</td><td>74,198 after dedup, 51,938 train / 11,130 validation / 11,130 test</td><td>Main 10-class model for document/evidence type.</td></tr>
+<tr><td>CNN2 evidence</td><td>41,482 after dedup, 29,036 train / 6,223 validation / 6,223 test</td><td>Evidence role model trained with proxy labels and CNN1 embedding support.</td></tr>
+<tr><td>CNN3 quality</td><td>22,125 total, 15,487 train / 3,319 validation / 3,319 test</td><td>Quality labels are ordinal and naturally subjective.</td></tr>
+<tr><td>CNN4 tamper</td><td>29,776 after dedup, 20,842 train / 4,467 validation / 4,467 test</td><td>Balanced authentic/tampered screening task.</td></tr>
+</table>
+<h3>Training strategy</h3>
+<div class="timeline">
+<div class="step"><div>Frozen phase</div><p>Lock pretrained features and train the new classification head first.</p></div>
+<div class="step"><div>Full fine-tune</div><p>Unfreeze the backbone with a smaller learning rate than the head.</p></div>
+<div class="step"><div>Regularize</div><p>Use AdamW, weight decay, dropout, class weighting, label smoothing, safe MixUp/CutMix, and early stopping.</p></div>
+<div class="step"><div>Calibrate</div><p>Fit temperature scaling on validation logits to improve confidence reliability.</p></div>
+<div class="step"><div>Tune decisions</div><p>Use validation-only threshold or logit-bias tuning, then keep the method only if it improves validation F1.</p></div>
+<div class="step"><div>Export</div><p>Save checkpoints, model card, comparison files, learning curves, confusion matrices, calibration plots, local explanations, and integration schema.</p></div>
+</div>
+</section>
+
+<section class="card section" id="evaluation">
+<div class="kicker">04 / Evaluation</div>
+<h2>Final completed run metrics</h2>
+<table>
+<tr><th>Model</th><th>Macro F1</th><th>Accuracy</th><th>AUC</th><th>ECE</th><th>Latency</th><th>Size</th></tr>
+<tr><td>CNN1 content</td><td><div class="score">0.93751 <span class="bar" style="width:94px"></span></div></td><td>0.94268</td><td>0.99633</td><td>0.00693</td><td>16.508 ms</td><td>160.708 MB</td></tr>
+<tr><td>CNN2 evidence</td><td><div class="score">0.94814 <span class="bar" style="width:95px"></span></div></td><td>0.94986</td><td>0.99042</td><td>0.00782</td><td>not timed separately</td><td>189.079 MB</td></tr>
+<tr><td>CNN3 quality</td><td><div class="score">0.72497 <span class="bar" style="width:72px"></span></div></td><td>0.72431</td><td>0.87338</td><td>0.01909</td><td>8.014 ms</td><td>32.401 MB</td></tr>
+<tr><td>CNN4 tamper</td><td><div class="score">0.93843 <span class="bar" style="width:94px"></span></div></td><td>0.93844</td><td>0.98382</td><td>0.01016</td><td>10.874 ms</td><td>51.766 MB</td></tr>
+</table>
+<div class="grid3">
+<div class="mini"><b>Highest macro F1</b><p>CNN2 evidence reached 0.94814 macro F1 with low calibration error.</p></div>
+<div class="mini"><b>Main production model</b><p>CNN1 content reached 0.93751 macro F1 across ten classes and supplies the main visual context.</p></div>
+<div class="mini"><b>Most subjective task</b><p>CNN3 quality is lower because clear, acceptable, and degraded labels overlap naturally.</p></div>
+</div>
+<h3>Decision tuning</h3>
+<table>
+<tr><th>Model</th><th>Decision method</th><th>Validation effect</th><th>Reason kept</th></tr>
+<tr><td>CNN1 content</td><td>Bounded logit bias</td><td>0.934928 to 0.936590</td><td>Improved text, chart, and correspondence boundaries.</td></tr>
+<tr><td>CNN2 evidence</td><td>Binary threshold 0.505</td><td>0.949523 to 0.949861</td><td>Improved evidence-role separation.</td></tr>
+<tr><td>CNN3 quality</td><td>Bounded logit bias</td><td>0.711047 to 0.714816</td><td>Improved the clear, acceptable, and degraded boundary.</td></tr>
+<tr><td>CNN4 tamper</td><td>Argmax</td><td>0.928570 to 0.928570</td><td>Threshold tuning did not improve validation F1, so the safer rule was kept.</td></tr>
+</table>
+</section>
+
+<section class="card section" id="results">
+<div class="kicker">05 / Result Inspector</div>
+<h2>Evidence package from the final run</h2>
+<p>The result folder is the proof layer of the project. It contains the metrics, reports, plots, thresholds, decision configs, local explanation examples, manifest, and integration schema needed to inspect the final model behavior.</p>
+<div class="stats">
+<div class="stat"><b>65</b><span>kept result files</span></div>
+<div class="stat"><b>4</b><span>learning curves</span></div>
+<div class="stat"><b>8</b><span>matrix and calibration plots</span></div>
+<div class="stat"><b>24</b><span>local explanation images</span></div>
+</div>
+<h3>Master files</h3>
+<div class="filelist">
+<a href="results/model_card.md">results/model_card.md</a>
+<a href="results/model_comparison.json">results/model_comparison.json</a>
+<a href="results/model_comparison.csv">results/model_comparison.csv</a>
+<a href="results/run_manifest.json">results/run_manifest.json</a>
+<a href="results/integration_schema.json">results/integration_schema.json</a>
+</div>
+
+<h3>Training curves</h3>
+<div class="artifact-grid">
+<div class="artifact"><img src="results/training/cnn1_content_learning_curve.png" alt="CNN1 content learning curve"><b>CNN1 content learning curve</b><p>Frozen phase and full fine-tuning for the 10-class content classifier.</p><div class="artifact-links"><a href="results/training/cnn1_content_history.json">history JSON</a><a href="results/training/cnn1_content_learning_curve.png">open image</a></div></div>
+<div class="artifact"><img src="results/training/cnn2_evidence_learning_curve.png" alt="CNN2 evidence learning curve"><b>CNN2 evidence learning curve</b><p>Evidence-weight training history using image features and content embeddings.</p><div class="artifact-links"><a href="results/training/cnn2_evidence_history.json">history JSON</a><a href="results/training/cnn2_evidence_learning_curve.png">open image</a></div></div>
+<div class="artifact"><img src="results/training/cnn3_quality_learning_curve.png" alt="CNN3 quality learning curve"><b>CNN3 quality learning curve</b><p>Quality-model progression for clear, acceptable, and degraded labels.</p><div class="artifact-links"><a href="results/training/cnn3_quality_history.json">history JSON</a><a href="results/training/cnn3_quality_learning_curve.png">open image</a></div></div>
+<div class="artifact"><img src="results/training/cnn4_tamper_learning_curve.png" alt="CNN4 tamper learning curve"><b>CNN4 tamper learning curve</b><p>Authentic versus tampered training and validation behavior.</p><div class="artifact-links"><a href="results/training/cnn4_tamper_history.json">history JSON</a><a href="results/training/cnn4_tamper_learning_curve.png">open image</a></div></div>
+</div>
+
+<h3>Per-model inspection</h3>
+<details open>
+<summary>CNN1 content: document type classifier</summary>
+<table>
+<tr><th>Metric</th><th>Value</th><th>Artifact</th></tr>
+<tr><td>Macro F1</td><td>0.93751</td><td><a href="results/xai/cnn1_content/metrics.json">metrics.json</a></td></tr>
+<tr><td>Accuracy</td><td>0.94268</td><td><a href="results/xai/cnn1_content/classification_report.txt">classification report</a></td></tr>
+<tr><td>AUC / ECE</td><td>0.99633 / 0.00693</td><td><a href="results/xai/cnn1_content/calibration.png">calibration.png</a></td></tr>
+<tr><td>Decision tuning</td><td>Logit bias, validation F1 0.934928 to 0.936590</td><td><a href="results/xai/cnn1_content/decision_config.json">decision_config.json</a></td></tr>
+</table>
+<div class="artifact-grid">
+<div class="artifact"><img src="results/xai/cnn1_content/confusion_matrix.png" alt="CNN1 confusion matrix"><b>Confusion matrix</b><p>Main remaining boundary: typed document, correspondence, and data chart.</p></div>
+<div class="artifact"><img src="results/xai/cnn1_content/calibration.png" alt="CNN1 calibration curve"><b>Calibration curve</b><p>Confidence reliability after temperature scaling.</p></div>
+</div>
+<div class="thumb-grid">
+<img src="results/xai/cnn1_content/local_0.png" alt="CNN1 local explanation 0">
+<img src="results/xai/cnn1_content/local_1.png" alt="CNN1 local explanation 1">
+<img src="results/xai/cnn1_content/local_2.png" alt="CNN1 local explanation 2">
+<img src="results/xai/cnn1_content/local_3.png" alt="CNN1 local explanation 3">
+<img src="results/xai/cnn1_content/local_4.png" alt="CNN1 local explanation 4">
+<img src="results/xai/cnn1_content/local_5.png" alt="CNN1 local explanation 5">
+</div>
+<div class="artifact-links"><a href="results/xai/cnn1_content/local_xai.json">local_xai.json</a><a href="results/xai/cnn1_content/thresholds.json">thresholds.json</a></div>
+</details>
+
+<details>
+<summary>CNN2 evidence: primary versus secondary evidence</summary>
+<table>
+<tr><th>Metric</th><th>Value</th><th>Artifact</th></tr>
+<tr><td>Macro F1</td><td>0.94814</td><td><a href="results/xai/cnn2_evidence/metrics.json">metrics.json</a></td></tr>
+<tr><td>Accuracy</td><td>0.94986</td><td><a href="results/xai/cnn2_evidence/classification_report.txt">classification report</a></td></tr>
+<tr><td>AUC / ECE</td><td>0.99042 / 0.00782</td><td><a href="results/xai/cnn2_evidence/calibration.png">calibration.png</a></td></tr>
+<tr><td>Decision tuning</td><td>Binary threshold 0.505, validation F1 0.949523 to 0.949861</td><td><a href="results/xai/cnn2_evidence/decision_config.json">decision_config.json</a></td></tr>
+</table>
+<div class="artifact-grid">
+<div class="artifact"><img src="results/xai/cnn2_evidence/confusion_matrix.png" alt="CNN2 confusion matrix"><b>Confusion matrix</b><p>Primary and secondary evidence decision balance.</p></div>
+<div class="artifact"><img src="results/xai/cnn2_evidence/calibration.png" alt="CNN2 calibration curve"><b>Calibration curve</b><p>Confidence behavior for evidence-role predictions.</p></div>
+</div>
+<div class="thumb-grid">
+<img src="results/xai/cnn2_evidence/local_0.png" alt="CNN2 local explanation 0">
+<img src="results/xai/cnn2_evidence/local_1.png" alt="CNN2 local explanation 1">
+<img src="results/xai/cnn2_evidence/local_2.png" alt="CNN2 local explanation 2">
+<img src="results/xai/cnn2_evidence/local_3.png" alt="CNN2 local explanation 3">
+<img src="results/xai/cnn2_evidence/local_4.png" alt="CNN2 local explanation 4">
+<img src="results/xai/cnn2_evidence/local_5.png" alt="CNN2 local explanation 5">
+</div>
+<div class="artifact-links"><a href="results/xai/cnn2_evidence/local_xai.json">local_xai.json</a><a href="results/xai/cnn2_evidence/thresholds.json">thresholds.json</a></div>
+</details>
+
+<details>
+<summary>CNN3 quality: clear, acceptable, degraded</summary>
+<table>
+<tr><th>Metric</th><th>Value</th><th>Artifact</th></tr>
+<tr><td>Macro F1</td><td>0.72497</td><td><a href="results/xai/cnn3_quality/metrics.json">metrics.json</a></td></tr>
+<tr><td>Accuracy</td><td>0.72431</td><td><a href="results/xai/cnn3_quality/classification_report.txt">classification report</a></td></tr>
+<tr><td>AUC / ECE</td><td>0.87338 / 0.01909</td><td><a href="results/xai/cnn3_quality/calibration.png">calibration.png</a></td></tr>
+<tr><td>Decision tuning</td><td>Logit bias, validation F1 0.711047 to 0.714816</td><td><a href="results/xai/cnn3_quality/decision_config.json">decision_config.json</a></td></tr>
+</table>
+<div class="artifact-grid">
+<div class="artifact"><img src="results/xai/cnn3_quality/confusion_matrix.png" alt="CNN3 confusion matrix"><b>Confusion matrix</b><p>Subjective boundary between clear, acceptable, and degraded quality.</p></div>
+<div class="artifact"><img src="results/xai/cnn3_quality/calibration.png" alt="CNN3 calibration curve"><b>Calibration curve</b><p>Confidence behavior for quality verification.</p></div>
+</div>
+<div class="thumb-grid">
+<img src="results/xai/cnn3_quality/local_0.png" alt="CNN3 local explanation 0">
+<img src="results/xai/cnn3_quality/local_1.png" alt="CNN3 local explanation 1">
+<img src="results/xai/cnn3_quality/local_2.png" alt="CNN3 local explanation 2">
+<img src="results/xai/cnn3_quality/local_3.png" alt="CNN3 local explanation 3">
+<img src="results/xai/cnn3_quality/local_4.png" alt="CNN3 local explanation 4">
+<img src="results/xai/cnn3_quality/local_5.png" alt="CNN3 local explanation 5">
+</div>
+<div class="artifact-links"><a href="results/xai/cnn3_quality/local_xai.json">local_xai.json</a><a href="results/xai/cnn3_quality/thresholds.json">thresholds.json</a></div>
+</details>
+
+<details>
+<summary>CNN4 tamper: authenticity screen</summary>
+<table>
+<tr><th>Metric</th><th>Value</th><th>Artifact</th></tr>
+<tr><td>Macro F1</td><td>0.93843</td><td><a href="results/xai/cnn4_tamper/metrics.json">metrics.json</a></td></tr>
+<tr><td>Accuracy</td><td>0.93844</td><td><a href="results/xai/cnn4_tamper/classification_report.txt">classification report</a></td></tr>
+<tr><td>AUC / ECE</td><td>0.98382 / 0.01016</td><td><a href="results/xai/cnn4_tamper/calibration.png">calibration.png</a></td></tr>
+<tr><td>Decision tuning</td><td>Argmax kept because threshold tuning did not improve validation F1</td><td><a href="results/xai/cnn4_tamper/decision_config.json">decision_config.json</a></td></tr>
+</table>
+<div class="artifact-grid">
+<div class="artifact"><img src="results/xai/cnn4_tamper/confusion_matrix.png" alt="CNN4 confusion matrix"><b>Confusion matrix</b><p>Balanced authentic and tampered predictions on the held-out set.</p></div>
+<div class="artifact"><img src="results/xai/cnn4_tamper/calibration.png" alt="CNN4 calibration curve"><b>Calibration curve</b><p>Confidence check for authenticity screening.</p></div>
+</div>
+<div class="thumb-grid">
+<img src="results/xai/cnn4_tamper/local_0.png" alt="CNN4 local explanation 0">
+<img src="results/xai/cnn4_tamper/local_1.png" alt="CNN4 local explanation 1">
+<img src="results/xai/cnn4_tamper/local_2.png" alt="CNN4 local explanation 2">
+<img src="results/xai/cnn4_tamper/local_3.png" alt="CNN4 local explanation 3">
+<img src="results/xai/cnn4_tamper/local_4.png" alt="CNN4 local explanation 4">
+<img src="results/xai/cnn4_tamper/local_5.png" alt="CNN4 local explanation 5">
+</div>
+<div class="artifact-links"><a href="results/xai/cnn4_tamper/local_xai.json">local_xai.json</a><a href="results/xai/cnn4_tamper/thresholds.json">thresholds.json</a></div>
+</details>
+
+<h3>Complete result inventory</h3>
+<table>
+<tr><th>Folder</th><th>Files kept for inspection</th></tr>
+<tr><td>results/</td><td><code>model_card.md</code>, <code>model_comparison.csv</code>, <code>model_comparison.json</code>, <code>run_manifest.json</code>, <code>integration_schema.json</code></td></tr>
+<tr><td>results/training/</td><td>Four learning curves and four training-history JSON files.</td></tr>
+<tr><td>results/xai/cnn1_content/</td><td>Metrics, classification report, confusion matrix, calibration, thresholds, decision config, six local explanation images, and local explanation JSON.</td></tr>
+<tr><td>results/xai/cnn2_evidence/</td><td>Metrics, classification report, confusion matrix, calibration, thresholds, decision config, six local explanation images, and local explanation JSON.</td></tr>
+<tr><td>results/xai/cnn3_quality/</td><td>Metrics, classification report, confusion matrix, calibration, thresholds, decision config, six local explanation images, and local explanation JSON.</td></tr>
+<tr><td>results/xai/cnn4_tamper/</td><td>Metrics, classification report, confusion matrix, calibration, thresholds, decision config, six local explanation images, and local explanation JSON.</td></tr>
+</table>
+</section>
+
+<section class="card section" id="rag">
+<div class="kicker">06 / RAG And Legal Feedback</div>
+<h2>How legal grounding works</h2>
+<div class="grid2">
+<div class="mini"><span class="tag green">Local legal library</span><p>Legal references live in <code>project/storage/law_knowledge/</code>. The current demo focuses on violence-against-women legal triage with Tunisia references, especially Organic Law No. 58 of 2017.</p></div>
+<div class="mini"><span class="tag blue">Retrieval index</span><p>The app chunks legal references, builds a local retrieval index, expands the query toward Tunisian law, and returns cited source chunks for the answer.</p></div>
+<div class="mini"><span class="tag gold">Document context</span><p>The retrieved legal chunks are combined with extracted facts, OCR text, content route, evidence role, readability label, and authenticity label.</p></div>
+<div class="mini"><span class="tag red">Guarded output</span><p>The final report avoids unsupported article numbers, unsupported codes, and legal overclaims. If the local model is unavailable, a deterministic cited fallback report is returned.</p></div>
+</div>
+<h3>Legal report sections</h3>
+<table>
+<tr><th>Section</th><th>Purpose</th></tr>
+<tr><td>Key Facts From The Document</td><td>Extracts names, jurisdiction, dates, relationship context, reported incidents, and available evidence from the uploaded file.</td></tr>
+<tr><td>Document Model Review</td><td>Shows which local document models ran and how their outputs affect interpretation.</td></tr>
+<tr><td>Tunisian Legal Framework To Verify</td><td>Summarizes retrieved Tunisia legal references with citations.</td></tr>
+<tr><td>Urgent Safety Risks</td><td>Flags escalation, threats, coercion, stalking, child safety, and immediate-danger checks.</td></tr>
+<tr><td>Evidence To Preserve</td><td>Lists documents, messages, metadata, screenshots, call logs, medical records, reports, and witness evidence to keep unchanged.</td></tr>
+<tr><td>Evidence Gaps</td><td>Identifies missing dates, source records, official complaints, medical/police/court documents, witnesses, and procedure checks.</td></tr>
+<tr><td>Recommended Next Steps</td><td>Gives cautious preparation steps and directs urgent safety or legal action to competent professionals.</td></tr>
+<tr><td>Citations Used</td><td>Lists retrieved chunks used by the legal framework section.</td></tr>
+</table>
+</section>
+
+<section class="card section" id="demo">
+<div class="kicker">07 / Local Demo</div>
+<h2>How the website uses the trained models</h2>
+<div class="flow">
+<div class="node"><div class="num">01</div><b>Upload</b><p>PDF, image, DOCX, TXT, JSON, or XLSX evidence files.</p></div>
+<div class="node"><div class="num">02</div><b>Normalize</b><p>Render pages or extract native text into processable elements.</p></div>
+<div class="node"><div class="num">03</div><b>Classify</b><p>Run content, evidence, quality, and tamper models on visual elements.</p></div>
+<div class="node"><div class="num">04</div><b>Extract</b><p>Collect OCR text, predictions, confidence scores, and model labels.</p></div>
+<div class="node"><div class="num">05</div><b>Retrieve</b><p>Search local legal references and prioritize Tunisia-focused material.</p></div>
+<div class="node"><div class="num">06</div><b>Report</b><p>Return clean legal triage cards in the browser.</p></div>
+</div>
+<h3>Backend payload fields</h3>
+<table>
+<tr><th>Field</th><th>Meaning</th></tr>
+<tr><td>content_type / content_scores</td><td>Main document or evidence type and full probability distribution.</td></tr>
+<tr><td>evid_weight / evid_scores</td><td>Primary versus secondary evidence role.</td></tr>
+<tr><td>quality / quality_usability</td><td>Clear, acceptable, or degraded quality plus usability guidance.</td></tr>
+<tr><td>tamper_prob / tamper_label</td><td>Authenticity-screening probability and predicted class.</td></tr>
+<tr><td>text / caption</td><td>OCR text and visual description used by the retrieval and report layer.</td></tr>
+<tr><td>ambiguous_content</td><td>Flag for close text-like predictions where cautious downstream handling is needed.</td></tr>
+</table>
+<div class="code">Run local demo from the pdf/ root:
+cd project
+run_ollama.cmd
+
+Open:
+http://localhost:8000/</div>
+</section>
+
+<section class="card section" id="limits">
+<div class="kicker">08 / Reliability Boundaries</div>
+<h2>What the system can and cannot claim</h2>
+<div class="grid2">
+<div class="mini"><span class="tag green">Reliable for</span><p>Structured document context, evidence type separation, scan-quality labeling, authenticity screening, visual explainability artifacts, and local retrieval input.</p></div>
+<div class="mini"><span class="tag red">Not a replacement for</span><p>Legal counsel, forensic lab verification, court admissibility decisions, jurisdiction-specific deadlines, or proof that an allegation is true.</p></div>
+</div>
+<div class="warn"><strong>Interpretation rule:</strong> model scores describe held-out visual classification performance. Legal decisions still require current law, verified facts, and qualified human review.</div>
+<h3>Final deliverables</h3>
+<table>
+<tr><th>Artifact</th><th>Location / name</th></tr>
+<tr><td>Notebook</td><td><code>document-processing-pipeline.ipynb</code></td></tr>
+<tr><td>Checkpoints</td><td><code>cnn1_content.pt</code>, <code>cnn2_evidence.pt</code>, <code>cnn3_quality.pt</code>, <code>cnn4_tamper.pt</code></td></tr>
+<tr><td>Results</td><td><code>results/</code></td></tr>
+<tr><td>Documentation</td><td><code>pipeline_vf_documentation.html</code></td></tr>
+<tr><td>Local app</td><td><code>project/</code></td></tr>
+</table>
+</section>
+
+<div class="footer">Final production documentation: selected run completed in 35,069 seconds and exported all four model checkpoints plus the full inspection package.</div>
+</main>
+</body>
+</html>

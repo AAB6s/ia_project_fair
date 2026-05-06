@@ -1,0 +1,506 @@
+[
+  {
+    "true": "tampered",
+    "predicted": "tampered",
+    "confidence": 0.87032,
+    "occlusion": [
+      {
+        "cell": [
+          3,
+          3
+        ],
+        "drop": 0.01663,
+        "after": 0.82284
+      },
+      {
+        "cell": [
+          2,
+          1
+        ],
+        "drop": -0.01638,
+        "after": 0.85585
+      },
+      {
+        "cell": [
+          1,
+          3
+        ],
+        "drop": -0.01688,
+        "after": 0.85636
+      },
+      {
+        "cell": [
+          3,
+          0
+        ],
+        "drop": -0.01897,
+        "after": 0.85844
+      },
+      {
+        "cell": [
+          0,
+          3
+        ],
+        "drop": -0.02115,
+        "after": 0.86063
+      },
+      {
+        "cell": [
+          1,
+          1
+        ],
+        "drop": -0.0232,
+        "after": 0.86268
+      },
+      {
+        "cell": [
+          3,
+          1
+        ],
+        "drop": -0.02336,
+        "after": 0.86283
+      },
+      {
+        "cell": [
+          2,
+          2
+        ],
+        "drop": -0.02661,
+        "after": 0.86608
+      }
+    ],
+    "lime": [
+      {
+        "segment": 0,
+        "weight": 0.307431
+      },
+      {
+        "segment": 1,
+        "weight": 0.168605
+      },
+      {
+        "segment": 9,
+        "weight": 0.165639
+      },
+      {
+        "segment": 2,
+        "weight": 0.164871
+      },
+      {
+        "segment": 5,
+        "weight": 0.123566
+      },
+      {
+        "segment": 7,
+        "weight": 0.113065
+      },
+      {
+        "segment": 4,
+        "weight": 0.104465
+      },
+      {
+        "segment": 6,
+        "weight": 0.088354
+      }
+    ],
+    "plot": "/kaggle/working/results/xai/cnn4_tamper/local_0.png"
+  },
+  {
+    "true": "tampered",
+    "predicted": "tampered",
+    "confidence": 0.97142,
+    "occlusion": [
+      {
+        "cell": [
+          2,
+          2
+        ],
+        "drop": 0.61221,
+        "after": 0.35828
+      },
+      {
+        "cell": [
+          1,
+          2
+        ],
+        "drop": 0.21187,
+        "after": 0.75861
+      },
+      {
+        "cell": [
+          2,
+          1
+        ],
+        "drop": 0.02327,
+        "after": 0.94722
+      },
+      {
+        "cell": [
+          3,
+          2
+        ],
+        "drop": 0.02195,
+        "after": 0.94854
+      },
+      {
+        "cell": [
+          3,
+          1
+        ],
+        "drop": 0.01557,
+        "after": 0.95492
+      },
+      {
+        "cell": [
+          0,
+          2
+        ],
+        "drop": 0.00903,
+        "after": 0.96146
+      },
+      {
+        "cell": [
+          0,
+          1
+        ],
+        "drop": 0.00879,
+        "after": 0.96169
+      },
+      {
+        "cell": [
+          1,
+          1
+        ],
+        "drop": 0.00869,
+        "after": 0.9618
+      }
+    ],
+    "lime": [
+      {
+        "segment": 9,
+        "weight": 0.363684
+      },
+      {
+        "segment": 11,
+        "weight": 0.265165
+      },
+      {
+        "segment": 7,
+        "weight": 0.134252
+      },
+      {
+        "segment": 10,
+        "weight": 0.12014
+      },
+      {
+        "segment": 12,
+        "weight": 0.102223
+      },
+      {
+        "segment": 6,
+        "weight": 0.070258
+      },
+      {
+        "segment": 15,
+        "weight": 0.067316
+      },
+      {
+        "segment": 1,
+        "weight": 0.063829
+      }
+    ],
+    "plot": "/kaggle/working/results/xai/cnn4_tamper/local_1.png"
+  },
+  {
+    "true": "authentic",
+    "predicted": "authentic",
+    "confidence": 0.7359,
+    "occlusion": [
+      {
+        "cell": [
+          2,
+          2
+        ],
+        "drop": 0.34798,
+        "after": 0.36272
+      },
+      {
+        "cell": [
+          1,
+          1
+        ],
+        "drop": 0.33328,
+        "after": 0.37742
+      },
+      {
+        "cell": [
+          0,
+          2
+        ],
+        "drop": 0.31469,
+        "after": 0.39602
+      },
+      {
+        "cell": [
+          1,
+          2
+        ],
+        "drop": 0.28568,
+        "after": 0.42502
+      },
+      {
+        "cell": [
+          0,
+          1
+        ],
+        "drop": 0.24329,
+        "after": 0.46741
+      },
+      {
+        "cell": [
+          3,
+          0
+        ],
+        "drop": 0.10506,
+        "after": 0.60564
+      },
+      {
+        "cell": [
+          2,
+          1
+        ],
+        "drop": 0.08989,
+        "after": 0.62081
+      },
+      {
+        "cell": [
+          0,
+          3
+        ],
+        "drop": 0.07136,
+        "after": 0.63934
+      }
+    ],
+    "lime": null,
+    "plot": "/kaggle/working/results/xai/cnn4_tamper/local_2.png"
+  },
+  {
+    "true": "tampered",
+    "predicted": "tampered",
+    "confidence": 0.98468,
+    "occlusion": [
+      {
+        "cell": [
+          2,
+          2
+        ],
+        "drop": 0.04102,
+        "after": 0.94352
+      },
+      {
+        "cell": [
+          2,
+          1
+        ],
+        "drop": 0.0246,
+        "after": 0.95993
+      },
+      {
+        "cell": [
+          1,
+          1
+        ],
+        "drop": 0.01381,
+        "after": 0.97072
+      },
+      {
+        "cell": [
+          3,
+          1
+        ],
+        "drop": 0.00811,
+        "after": 0.97643
+      },
+      {
+        "cell": [
+          3,
+          3
+        ],
+        "drop": 0.0079,
+        "after": 0.97663
+      },
+      {
+        "cell": [
+          2,
+          3
+        ],
+        "drop": 0.00732,
+        "after": 0.97722
+      },
+      {
+        "cell": [
+          0,
+          2
+        ],
+        "drop": 0.00694,
+        "after": 0.97759
+      },
+      {
+        "cell": [
+          3,
+          2
+        ],
+        "drop": 0.00621,
+        "after": 0.97832
+      }
+    ],
+    "lime": null,
+    "plot": "/kaggle/working/results/xai/cnn4_tamper/local_3.png"
+  },
+  {
+    "true": "authentic",
+    "predicted": "authentic",
+    "confidence": 0.97735,
+    "occlusion": [
+      {
+        "cell": [
+          1,
+          2
+        ],
+        "drop": 0.04282,
+        "after": 0.93076
+      },
+      {
+        "cell": [
+          2,
+          2
+        ],
+        "drop": 0.01574,
+        "after": 0.95784
+      },
+      {
+        "cell": [
+          2,
+          1
+        ],
+        "drop": 0.01178,
+        "after": 0.9618
+      },
+      {
+        "cell": [
+          3,
+          2
+        ],
+        "drop": 0.00574,
+        "after": 0.96785
+      },
+      {
+        "cell": [
+          3,
+          1
+        ],
+        "drop": 0.00375,
+        "after": 0.96983
+      },
+      {
+        "cell": [
+          3,
+          0
+        ],
+        "drop": 0.00208,
+        "after": 0.9715
+      },
+      {
+        "cell": [
+          1,
+          3
+        ],
+        "drop": -0.00029,
+        "after": 0.97388
+      },
+      {
+        "cell": [
+          0,
+          0
+        ],
+        "drop": -0.00084,
+        "after": 0.97442
+      }
+    ],
+    "lime": null,
+    "plot": "/kaggle/working/results/xai/cnn4_tamper/local_4.png"
+  },
+  {
+    "true": "authentic",
+    "predicted": "authentic",
+    "confidence": 0.9453,
+    "occlusion": [
+      {
+        "cell": [
+          2,
+          1
+        ],
+        "drop": 0.03742,
+        "after": 0.92113
+      },
+      {
+        "cell": [
+          3,
+          3
+        ],
+        "drop": 0.02553,
+        "after": 0.93303
+      },
+      {
+        "cell": [
+          2,
+          0
+        ],
+        "drop": 0.02028,
+        "after": 0.93827
+      },
+      {
+        "cell": [
+          0,
+          0
+        ],
+        "drop": 0.01635,
+        "after": 0.9422
+      },
+      {
+        "cell": [
+          0,
+          2
+        ],
+        "drop": 0.01569,
+        "after": 0.94286
+      },
+      {
+        "cell": [
+          0,
+          1
+        ],
+        "drop": 0.01521,
+        "after": 0.94335
+      },
+      {
+        "cell": [
+          2,
+          3
+        ],
+        "drop": 0.01455,
+        "after": 0.944
+      },
+      {
+        "cell": [
+          3,
+          2
+        ],
+        "drop": 0.01311,
+        "after": 0.94544
+      }
+    ],
+    "lime": null,
+    "plot": "/kaggle/working/results/xai/cnn4_tamper/local_5.png"
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "class": "primary_evidence",
+    "threshold": 0.5,
+    "f1": 0.93884,
+    "precision": 0.92555,
+    "recall": 0.95251
+  },
+  {
+    "class": "secondary_evidence",
+    "threshold": 0.45,
+    "f1": 0.9579,
+    "precision": 0.96403,
+    "recall": 0.95184
+  }
+]

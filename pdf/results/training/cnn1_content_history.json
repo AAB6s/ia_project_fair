@@ -1,0 +1,214 @@
+[
+  {
+    "phase": "frozen",
+    "epoch": 1,
+    "loss": 1.40887,
+    "acc": 0.309706,
+    "val_f1": 0.622558,
+    "lr": 0.0015
+  },
+  {
+    "phase": "frozen",
+    "epoch": 2,
+    "loss": 1.283302,
+    "acc": 0.341322,
+    "val_f1": 0.626581,
+    "lr": 0.0015
+  },
+  {
+    "phase": "frozen",
+    "epoch": 3,
+    "loss": 1.249113,
+    "acc": 0.339974,
+    "val_f1": 0.642182,
+    "lr": 0.0015
+  },
+  {
+    "phase": "frozen",
+    "epoch": 4,
+    "loss": 1.237134,
+    "acc": 0.343153,
+    "val_f1": 0.657543,
+    "lr": 0.0015
+  },
+  {
+    "phase": "full",
+    "epoch": 1,
+    "loss": 0.98441,
+    "acc": 0.424014,
+    "val_f1": 0.852722,
+    "best": true,
+    "lr_head": 0.00018090169943749476,
+    "lr_backbone": 1.8090169943749477e-05
+  },
+  {
+    "phase": "full",
+    "epoch": 2,
+    "loss": 0.636593,
+    "acc": 0.512292,
+    "val_f1": 0.882821,
+    "best": true,
+    "lr_head": 0.00013090169943749476,
+    "lr_backbone": 1.3090169943749475e-05
+  },
+  {
+    "phase": "full",
+    "epoch": 3,
+    "loss": 0.593034,
+    "acc": 0.525643,
+    "val_f1": 0.90153,
+    "best": true,
+    "lr_head": 6.909830056250527e-05,
+    "lr_backbone": 6.909830056250527e-06
+  },
+  {
+    "phase": "full",
+    "epoch": 4,
+    "loss": 0.578115,
+    "acc": 0.523197,
+    "val_f1": 0.902954,
+    "best": true,
+    "lr_head": 1.9098300562505266e-05,
+    "lr_backbone": 1.9098300562505266e-06
+  },
+  {
+    "phase": "full",
+    "epoch": 5,
+    "loss": 0.546015,
+    "acc": 0.524777,
+    "val_f1": 0.90413,
+    "best": true,
+    "lr_head": 0.0002,
+    "lr_backbone": 2e-05
+  },
+  {
+    "phase": "full",
+    "epoch": 6,
+    "loss": 0.553151,
+    "acc": 0.530788,
+    "val_f1": 0.908332,
+    "best": true,
+    "lr_head": 0.00019510565162951537,
+    "lr_backbone": 1.9510565162951538e-05
+  },
+  {
+    "phase": "full",
+    "epoch": 7,
+    "loss": 0.524156,
+    "acc": 0.523813,
+    "val_f1": 0.913499,
+    "best": true,
+    "lr_head": 0.00018090169943749476,
+    "lr_backbone": 1.8090169943749477e-05
+  },
+  {
+    "phase": "full",
+    "epoch": 8,
+    "loss": 0.509801,
+    "acc": 0.55015,
+    "val_f1": 0.916047,
+    "best": true,
+    "lr_head": 0.00015877852522924732,
+    "lr_backbone": 1.5877852522924733e-05
+  },
+  {
+    "phase": "full",
+    "epoch": 9,
+    "loss": 0.494679,
+    "acc": 0.524314,
+    "val_f1": 0.922426,
+    "best": true,
+    "lr_head": 0.00013090169943749476,
+    "lr_backbone": 1.3090169943749475e-05
+  },
+  {
+    "phase": "full",
+    "epoch": 10,
+    "loss": 0.470801,
+    "acc": 0.533523,
+    "val_f1": 0.924243,
+    "best": true,
+    "lr_head": 0.0001,
+    "lr_backbone": 1e-05
+  },
+  {
+    "phase": "full",
+    "epoch": 11,
+    "loss": 0.47588,
+    "acc": 0.512485,
+    "val_f1": 0.928406,
+    "best": true,
+    "lr_head": 6.909830056250527e-05,
+    "lr_backbone": 6.909830056250527e-06
+  },
+  {
+    "phase": "full",
+    "epoch": 12,
+    "loss": 0.469828,
+    "acc": 0.515336,
+    "val_f1": 0.928774,
+    "best": true,
+    "lr_head": 4.12214747707527e-05,
+    "lr_backbone": 4.12214747707527e-06
+  },
+  {
+    "phase": "full",
+    "epoch": 13,
+    "loss": 0.451807,
+    "acc": 0.547106,
+    "val_f1": 0.930579,
+    "best": true,
+    "lr_head": 1.9098300562505266e-05,
+    "lr_backbone": 1.9098300562505266e-06
+  },
+  {
+    "phase": "full",
+    "epoch": 14,
+    "loss": 0.436259,
+    "acc": 0.544332,
+    "val_f1": 0.930172,
+    "best": false,
+    "lr_head": 4.8943483704846475e-06,
+    "lr_backbone": 4.894348370484648e-07
+  },
+  {
+    "phase": "full",
+    "epoch": 15,
+    "loss": 0.432751,
+    "acc": 0.548224,
+    "val_f1": 0.930202,
+    "best": false,
+    "lr_head": 0.0002,
+    "lr_backbone": 2e-05
+  },
+  {
+    "phase": "full",
+    "epoch": 16,
+    "loss": 0.458161,
+    "acc": 0.557549,
+    "val_f1": 0.923134,
+    "best": false,
+    "lr_head": 0.00019876883405951377,
+    "lr_backbone": 1.9876883405951378e-05
+  },
+  {
+    "phase": "full",
+    "epoch": 17,
+    "loss": 0.448187,
+    "acc": 0.533311,
+    "val_f1": 0.926118,
+    "best": false,
+    "lr_head": 0.00019510565162951537,
+    "lr_backbone": 1.9510565162951538e-05
+  },
+  {
+    "phase": "full",
+    "epoch": 18,
+    "loss": 0.448426,
+    "acc": 0.550131,
+    "val_f1": 0.93248,
+    "best": true,
+    "lr_head": 0.0001891006524188368,
+    "lr_backbone": 1.891006524188368e-05
+  }
+]

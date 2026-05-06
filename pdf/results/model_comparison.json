@@ -1,0 +1,154 @@
+[
+  {
+    "model": "cnn1_content",
+    "classes": 10,
+    "labels": [
+      "injury_photo",
+      "scene_damage",
+      "screenshot",
+      "typed_document",
+      "correspondence",
+      "handwritten",
+      "medical_record",
+      "data_chart",
+      "signature_stamp",
+      "irrelevant"
+    ],
+    "params": 20839515,
+    "model_mb": 160.708,
+    "latency_ms": 16.508,
+    "best_val_f1": 0.93248,
+    "test_macro_f1": 0.93751,
+    "accuracy": 0.94268,
+    "auc": 0.99633,
+    "ece": 0.00693,
+    "temperature": 0.54765,
+    "ema_selected": true,
+    "decision_val_f1": 0.93659,
+    "decision_config": {
+      "type": "logit_bias",
+      "bias": [
+        0.0,
+        0.28,
+        -0.16,
+        0.24,
+        -0.04,
+        -0.08,
+        -0.28,
+        -0.08,
+        0.04,
+        0.0
+      ],
+      "base_val_f1": 0.934928,
+      "decision_val_f1": 0.93659,
+      "class_names": [
+        "injury_photo",
+        "scene_damage",
+        "screenshot",
+        "typed_document",
+        "correspondence",
+        "handwritten",
+        "medical_record",
+        "data_chart",
+        "signature_stamp",
+        "irrelevant"
+      ]
+    },
+    "path": "/kaggle/working/cnn1_content.pt"
+  },
+  {
+    "model": "cnn2_evidence",
+    "classes": 2,
+    "labels": [
+      "primary_evidence",
+      "secondary_evidence"
+    ],
+    "params": null,
+    "model_mb": 189.079,
+    "latency_ms": null,
+    "best_val_f1": 0.94866,
+    "test_macro_f1": 0.94814,
+    "accuracy": 0.94986,
+    "auc": 0.99042,
+    "ece": 0.00782,
+    "temperature": 0.54537,
+    "ema_selected": false,
+    "decision_val_f1": 0.949861,
+    "decision_config": {
+      "type": "binary_threshold",
+      "threshold": 0.505,
+      "base_val_f1": 0.949523,
+      "decision_val_f1": 0.949861,
+      "class_names": [
+        "primary_evidence",
+        "secondary_evidence"
+      ]
+    },
+    "path": "/kaggle/working/cnn2_evidence.pt"
+  },
+  {
+    "model": "cnn3_quality",
+    "classes": 3,
+    "labels": [
+      "clear",
+      "acceptable",
+      "degraded"
+    ],
+    "params": 4172159,
+    "model_mb": 32.401,
+    "latency_ms": 8.014,
+    "best_val_f1": 0.70997,
+    "test_macro_f1": 0.72497,
+    "accuracy": 0.72431,
+    "auc": 0.87338,
+    "ece": 0.01909,
+    "temperature": 0.77538,
+    "ema_selected": false,
+    "decision_val_f1": 0.714816,
+    "decision_config": {
+      "type": "logit_bias",
+      "bias": [
+        -0.12,
+        0.0,
+        -0.04
+      ],
+      "base_val_f1": 0.711047,
+      "decision_val_f1": 0.714816,
+      "class_names": [
+        "clear",
+        "acceptable",
+        "degraded"
+      ]
+    },
+    "path": "/kaggle/working/cnn3_quality.pt"
+  },
+  {
+    "model": "cnn4_tamper",
+    "classes": 2,
+    "labels": [
+      "authentic",
+      "tampered"
+    ],
+    "params": 6677666,
+    "model_mb": 51.766,
+    "latency_ms": 10.874,
+    "best_val_f1": 0.92656,
+    "test_macro_f1": 0.93843,
+    "accuracy": 0.93844,
+    "auc": 0.98382,
+    "ece": 0.01016,
+    "temperature": 1.06495,
+    "ema_selected": false,
+    "decision_val_f1": 0.92857,
+    "decision_config": {
+      "type": "argmax",
+      "base_val_f1": 0.92857,
+      "decision_val_f1": 0.92857,
+      "class_names": [
+        "authentic",
+        "tampered"
+      ]
+    },
+    "path": "/kaggle/working/cnn4_tamper.pt"
+  }
+]

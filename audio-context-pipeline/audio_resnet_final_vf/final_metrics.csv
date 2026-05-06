@@ -1,0 +1,2 @@
+model,accuracy,macro_f1,weighted_f1,precision_macro,recall_macro,auc_macro_ovr,ece,temperature,parameters,model_mb,latency_ms,best_val_f1,tta_shifts
+resnet34_final,0.96978,0.92483,0.97046,0.89739,0.98025,0.99722,0.01605,0.7,21484742,82.106,4.197,0.91345,"[-8, 0, 8]"

@@ -1,0 +1,8 @@
+                    precision    recall  f1-score   support
+
+  primary_evidence       0.92      0.95      0.94      2506
+secondary_evidence       0.97      0.95      0.96      3717
+
+          accuracy                           0.95      6223
+         macro avg       0.95      0.95      0.95      6223
+      weighted avg       0.95      0.95      0.95      6223

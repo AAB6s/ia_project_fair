@@ -1,0 +1,16 @@
+[
+  {
+    "class": "authentic",
+    "threshold": 0.45,
+    "f1": 0.93885,
+    "precision": 0.9359,
+    "recall": 0.94181
+  },
+  {
+    "class": "tampered",
+    "threshold": 0.4,
+    "f1": 0.94022,
+    "precision": 0.92663,
+    "recall": 0.95422
+  }
+]

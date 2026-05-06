@@ -1,0 +1,120 @@
+{
+  "accuracy": 0.94268,
+  "macro_f1": 0.93751,
+  "auc": 0.99633,
+  "ece": 0.00693,
+  "top_confusions": [
+    {
+      "true": "data_chart",
+      "predicted": "typed_document",
+      "count": 139
+    },
+    {
+      "true": "typed_document",
+      "predicted": "data_chart",
+      "count": 108
+    },
+    {
+      "true": "correspondence",
+      "predicted": "typed_document",
+      "count": 80
+    },
+    {
+      "true": "typed_document",
+      "predicted": "correspondence",
+      "count": 49
+    },
+    {
+      "true": "signature_stamp",
+      "predicted": "correspondence",
+      "count": 44
+    },
+    {
+      "true": "correspondence",
+      "predicted": "data_chart",
+      "count": 25
+    },
+    {
+      "true": "handwritten",
+      "predicted": "typed_document",
+      "count": 24
+    },
+    {
+      "true": "irrelevant",
+      "predicted": "data_chart",
+      "count": 20
+    },
+    {
+      "true": "data_chart",
+      "predicted": "correspondence",
+      "count": 19
+    },
+    {
+      "true": "scene_damage",
+      "predicted": "irrelevant",
+      "count": 14
+    }
+  ],
+  "per_class": {
+    "injury_photo": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 1199
+    },
+    "scene_damage": {
+      "precision": 0.98982,
+      "recall": 0.98232,
+      "f1": 0.98606,
+      "support": 1188
+    },
+    "screenshot": {
+      "precision": 0.99389,
+      "recall": 0.99563,
+      "f1": 0.99476,
+      "support": 1143
+    },
+    "typed_document": {
+      "precision": 0.79859,
+      "recall": 0.84987,
+      "f1": 0.82343,
+      "support": 1199
+    },
+    "correspondence": {
+      "precision": 0.90158,
+      "recall": 0.90083,
+      "f1": 0.90121,
+      "support": 1200
+    },
+    "handwritten": {
+      "precision": 0.97252,
+      "recall": 0.94651,
+      "f1": 0.95934,
+      "support": 860
+    },
+    "medical_record": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 1200
+    },
+    "data_chart": {
+      "precision": 0.77658,
+      "recall": 0.77036,
+      "f1": 0.77346,
+      "support": 749
+    },
+    "signature_stamp": {
+      "precision": 0.99568,
+      "recall": 0.96083,
+      "f1": 0.97795,
+      "support": 1200
+    },
+    "irrelevant": {
+      "precision": 0.95812,
+      "recall": 0.95973,
+      "f1": 0.95893,
+      "support": 1192
+    }
+  }
+}

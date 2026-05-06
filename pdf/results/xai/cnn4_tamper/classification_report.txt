@@ -1,0 +1,8 @@
+              precision    recall  f1-score   support
+
+   authentic       0.94      0.94      0.94      2217
+    tampered       0.94      0.94      0.94      2250
+
+    accuracy                           0.94      4467
+   macro avg       0.94      0.94      0.94      4467
+weighted avg       0.94      0.94      0.94      4467

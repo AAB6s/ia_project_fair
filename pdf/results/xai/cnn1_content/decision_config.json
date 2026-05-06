@@ -1,0 +1,29 @@
+{
+  "type": "logit_bias",
+  "bias": [
+    0.0,
+    0.28,
+    -0.16,
+    0.24,
+    -0.04,
+    -0.08,
+    -0.28,
+    -0.08,
+    0.04,
+    0.0
+  ],
+  "base_val_f1": 0.934928,
+  "decision_val_f1": 0.93659,
+  "class_names": [
+    "injury_photo",
+    "scene_damage",
+    "screenshot",
+    "typed_document",
+    "correspondence",
+    "handwritten",
+    "medical_record",
+    "data_chart",
+    "signature_stamp",
+    "irrelevant"
+  ]
+}

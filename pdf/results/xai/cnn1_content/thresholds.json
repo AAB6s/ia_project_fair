@@ -1,0 +1,72 @@
+[
+  {
+    "class": "injury_photo",
+    "threshold": 0.4,
+    "f1": 1.0,
+    "precision": 1.0,
+    "recall": 1.0
+  },
+  {
+    "class": "scene_damage",
+    "threshold": 0.3,
+    "f1": 0.98696,
+    "precision": 0.98654,
+    "recall": 0.98737
+  },
+  {
+    "class": "screenshot",
+    "threshold": 0.4,
+    "f1": 0.99476,
+    "precision": 0.99389,
+    "recall": 0.99563
+  },
+  {
+    "class": "typed_document",
+    "threshold": 0.5,
+    "f1": 0.82977,
+    "precision": 0.81833,
+    "recall": 0.84153
+  },
+  {
+    "class": "correspondence",
+    "threshold": 0.45,
+    "f1": 0.90538,
+    "precision": 0.90575,
+    "recall": 0.905
+  },
+  {
+    "class": "handwritten",
+    "threshold": 0.2,
+    "f1": 0.96564,
+    "precision": 0.96733,
+    "recall": 0.96395
+  },
+  {
+    "class": "medical_record",
+    "threshold": 0.05,
+    "f1": 1.0,
+    "precision": 1.0,
+    "recall": 1.0
+  },
+  {
+    "class": "data_chart",
+    "threshold": 0.3,
+    "f1": 0.78803,
+    "precision": 0.72635,
+    "recall": 0.86115
+  },
+  {
+    "class": "signature_stamp",
+    "threshold": 0.35,
+    "f1": 0.97808,
+    "precision": 0.98976,
+    "recall": 0.96667
+  },
+  {
+    "class": "irrelevant",
+    "threshold": 0.7,
+    "f1": 0.96401,
+    "precision": 0.98511,
+    "recall": 0.94379
+  }
+]

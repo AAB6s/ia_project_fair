@@ -1,0 +1,9 @@
+{
+  "type": "argmax",
+  "base_val_f1": 0.92857,
+  "decision_val_f1": 0.92857,
+  "class_names": [
+    "authentic",
+    "tampered"
+  ]
+}

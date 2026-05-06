@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+gradio>=5.0.0
+python-multipart
+numpy
+scipy
+scikit-learn
+torch
+torchvision
+librosa
+soundfile
+openai-whisper
+transformers

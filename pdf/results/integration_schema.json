@@ -1,0 +1,58 @@
+{
+  "input": "pdf/docx/pptx/image document",
+  "stages": [
+    "normalise",
+    "layout_regions",
+    "content_classification",
+    "evidence_weighting",
+    "quality_check",
+    "tamper_check",
+    "ocr",
+    "captioning",
+    "json_assembly"
+  ],
+  "element_schema": {
+    "id": "region id",
+    "page": "page index",
+    "bbox": "page coordinates",
+    "content_type": [
+      "injury_photo",
+      "scene_damage",
+      "screenshot",
+      "typed_document",
+      "correspondence",
+      "handwritten",
+      "medical_record",
+      "data_chart",
+      "signature_stamp",
+      "irrelevant"
+    ],
+    "content_conf": "softmax confidence",
+    "evid_weight": [
+      "primary_evidence",
+      "secondary_evidence"
+    ],
+    "quality": [
+      "clear",
+      "acceptable",
+      "degraded"
+    ],
+    "tamper_label": [
+      "likely_authentic",
+      "needs_verification",
+      "possibly_tampered"
+    ],
+    "tamper_threshold": "checkpoint decision threshold when available",
+    "quality_usability": [
+      "usable",
+      "low_quality"
+    ],
+    "text": "ocr text when present",
+    "caption": "vision caption when present"
+  },
+  "rag_payload": {
+    "document_json": "pipeline output",
+    "retrieved_legal_context": "local vector database results",
+    "llm_task": "legal feedback and next action recommendations"
+  }
+}

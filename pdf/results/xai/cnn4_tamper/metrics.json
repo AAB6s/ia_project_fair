@@ -1,0 +1,32 @@
+{
+  "accuracy": 0.93844,
+  "macro_f1": 0.93843,
+  "auc": 0.98382,
+  "ece": 0.01016,
+  "top_confusions": [
+    {
+      "true": "authentic",
+      "predicted": "tampered",
+      "count": 142
+    },
+    {
+      "true": "tampered",
+      "predicted": "authentic",
+      "count": 133
+    }
+  ],
+  "per_class": {
+    "authentic": {
+      "precision": 0.93976,
+      "recall": 0.93595,
+      "f1": 0.93785,
+      "support": 2217
+    },
+    "tampered": {
+      "precision": 0.93714,
+      "recall": 0.94089,
+      "f1": 0.93901,
+      "support": 2250
+    }
+  }
+}

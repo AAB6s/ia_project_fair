@@ -1,0 +1,284 @@
+{
+  "pipeline": "document_processing_pretrained_cv",
+  "classes": {
+    "cnn1_content": [
+      "injury_photo",
+      "scene_damage",
+      "screenshot",
+      "typed_document",
+      "correspondence",
+      "handwritten",
+      "medical_record",
+      "data_chart",
+      "signature_stamp",
+      "irrelevant"
+    ],
+    "cnn2_evidence": [
+      "primary_evidence",
+      "secondary_evidence"
+    ],
+    "cnn3_quality": [
+      "clear",
+      "acceptable",
+      "degraded"
+    ],
+    "cnn4_tamper": [
+      "authentic",
+      "tampered"
+    ]
+  },
+  "config": {
+    "output_dir": "/kaggle/working/results",
+    "input_dir": "/kaggle/input/test-documents",
+    "ds_rvlcdip": "/kaggle/input/datasets/pdavpoojan/the-rvlcdip-dataset-test/test",
+    "ds_tobacco": "/kaggle/input/datasets/patrickaudriaz/tobacco3482jpg/Tobacco3482-jpg",
+    "ds_isic_imgs": "/kaggle/input/datasets/nischaydnk/isic-2019-jpg-224x224-resized/train-image/image",
+    "ds_mura": "/kaggle/input/datasets/cjinny/mura-v11/MURA-v1.1",
+    "ds_nih": "/kaggle/input/datasets/organizations/nih-chest-xrays/data",
+    "ds_disaster": "/kaggle/input/datasets/varpit94/disaster-images-dataset/Comprehensive Disaster Dataset(CDD)",
+    "ds_damaged": "/kaggle/input/datasets/mehrael/damaged-buildings-dataset/DamadgedBuildingsDataset",
+    "ds_hurricane": "/kaggle/input/datasets/kmader/satellite-images-of-hurricane-damage",
+    "ds_screenshots": "/kaggle/input/datasets/patzold/screenshots-dataset",
+    "ds_android": "/kaggle/input/datasets/uzairkhan45/categorized-android-apps-screenshots/Categorized_Andriod_Apps_Images",
+    "ds_cedar": "/kaggle/input/datasets/shreelakshmigp/cedardataset/signatures",
+    "ds_sigver": "/kaggle/input/datasets/akashgundu/signature-verification-dataset/extract",
+    "ds_signet": "/kaggle/input/datasets/victordibia/signverod",
+    "ds_ahcd_imgs": "/kaggle/input/datasets/skanderkammoun/ahcd-arabic-handwriting/Arabic Handwritten Characters Dataset CSV/training images/training images.csv",
+    "ds_indoor": "/kaggle/input/datasets/itsahmad/indoor-scenes-cvpr-2019/indoorCVPR_09/Images",
+    "ds_kadid_imgs": "/kaggle/input/datasets/srachejack/kadid10k/images",
+    "ds_kadid_csv": "/kaggle/input/datasets/srachejack/kadid10k/image_labeled_by_per_noise.csv",
+    "ds_biq_dir": "/kaggle/input/datasets/nisarahmedrana/biq2021",
+    "ds_biq_csv": "/kaggle/input/datasets/nisarahmedrana/biq2021/BIQ2021.csv",
+    "ds_casia": "/kaggle/input/datasets/divg07/casia-20-image-tampering-detection-dataset/CASIA2",
+    "ds_realfake": "/kaggle/input/datasets/shivamardeshna/real-and-fake-images-dataset-for-image-forensics/Data Set 1/Data Set 1",
+    "ds_cg1050_tr": "/kaggle/input/datasets/saurabhshahane/cg1050/TRAINING_CG-1050/TRAINING",
+    "ds_cg1050_val": "/kaggle/input/datasets/saurabhshahane/cg1050/VALIDATION_CG-1050/VALIDATION",
+    "img_size": 224,
+    "dpi": 300,
+    "train_epochs_frozen": 4,
+    "train_epochs_full": 10,
+    "cnn1_epochs_full": 18,
+    "cnn1_patience": 5,
+    "cnn2_epochs_full": 10,
+    "cnn2_patience": 4,
+    "cnn3_epochs_frozen": 3,
+    "cnn3_epochs_full": 24,
+    "cnn3_patience": 7,
+    "cnn4_epochs_full": 14,
+    "cnn4_patience": 5,
+    "train_lr_frozen": 0.0015,
+    "train_lr_full": 0.0002,
+    "train_lr_backbone": 2e-05,
+    "train_batch_size": 64,
+    "train_batch_size_c2": 32,
+    "mixup_alpha": 0.35,
+    "cutmix_prob": 0.25,
+    "cnn1_mixup_alpha": 0.24,
+    "cnn1_cutmix_prob": 0.08,
+    "cnn1_hierarchy_weight": 0.16,
+    "label_smoothing": 0.08,
+    "label_smoothing_cnn4": 0.04,
+    "cnn3_label_smoothing": 0.015,
+    "cnn3_focal_gamma": 0.6,
+    "cnn3_mixup_alpha": 0.0,
+    "cnn3_lr_full": 0.00011,
+    "cnn3_lr_backbone": 8e-06,
+    "cnn3_ordinal_weight": 0.2,
+    "cnn3_soft_smoothing": 0.16,
+    "focal_gamma": 2.0,
+    "cnn1_weight_power": 0.38,
+    "cnn3_weight_power": 0.24,
+    "early_stop_patience": 4,
+    "ema_decay": 0.999,
+    "ood_max_softmax": 0.4,
+    "ambiguity_gap": 0.15,
+    "tampering_threshold": 0.5,
+    "decision_tune_models": true,
+    "decision_threshold_points": 181,
+    "decision_bias_bound": 0.28,
+    "decision_bias_steps": 15,
+    "decision_bias_rounds": 3,
+    "decision_min_val_gain": 0.0002,
+    "final_tta": true,
+    "inference_tta": true,
+    "run_captioning": true,
+    "run_ocr": true,
+    "xai_local_examples": 6,
+    "xai_occlusion_grid": 4,
+    "xai_threshold_points": 19,
+    "xai_lime_examples": 2,
+    "xai_lime_samples": 64,
+    "xai_lime_segments": 28,
+    "report_latency_reps": 12,
+    "cnn1_path": "/kaggle/working/cnn1_content.pt",
+    "cnn2_path": "/kaggle/working/cnn2_evidence.pt",
+    "cnn3_path": "/kaggle/working/cnn3_quality.pt",
+    "cnn4_path": "/kaggle/working/cnn4_tamper.pt"
+  },
+  "models": [
+    {
+      "model": "cnn1_content",
+      "classes": 10,
+      "labels": [
+        "injury_photo",
+        "scene_damage",
+        "screenshot",
+        "typed_document",
+        "correspondence",
+        "handwritten",
+        "medical_record",
+        "data_chart",
+        "signature_stamp",
+        "irrelevant"
+      ],
+      "params": 20839515,
+      "model_mb": 160.708,
+      "latency_ms": 16.508,
+      "best_val_f1": 0.93248,
+      "test_macro_f1": 0.93751,
+      "accuracy": 0.94268,
+      "auc": 0.99633,
+      "ece": 0.00693,
+      "temperature": 0.54765,
+      "ema_selected": true,
+      "decision_val_f1": 0.93659,
+      "decision_config": {
+        "type": "logit_bias",
+        "bias": [
+          0.0,
+          0.28,
+          -0.16,
+          0.24,
+          -0.04,
+          -0.08,
+          -0.28,
+          -0.08,
+          0.04,
+          0.0
+        ],
+        "base_val_f1": 0.934928,
+        "decision_val_f1": 0.93659,
+        "class_names": [
+          "injury_photo",
+          "scene_damage",
+          "screenshot",
+          "typed_document",
+          "correspondence",
+          "handwritten",
+          "medical_record",
+          "data_chart",
+          "signature_stamp",
+          "irrelevant"
+        ]
+      },
+      "path": "/kaggle/working/cnn1_content.pt"
+    },
+    {
+      "model": "cnn2_evidence",
+      "classes": 2,
+      "labels": [
+        "primary_evidence",
+        "secondary_evidence"
+      ],
+      "params": null,
+      "model_mb": 189.079,
+      "latency_ms": null,
+      "best_val_f1": 0.94866,
+      "test_macro_f1": 0.94814,
+      "accuracy": 0.94986,
+      "auc": 0.99042,
+      "ece": 0.00782,
+      "temperature": 0.54537,
+      "ema_selected": false,
+      "decision_val_f1": 0.949861,
+      "decision_config": {
+        "type": "binary_threshold",
+        "threshold": 0.505,
+        "base_val_f1": 0.949523,
+        "decision_val_f1": 0.949861,
+        "class_names": [
+          "primary_evidence",
+          "secondary_evidence"
+        ]
+      },
+      "path": "/kaggle/working/cnn2_evidence.pt"
+    },
+    {
+      "model": "cnn3_quality",
+      "classes": 3,
+      "labels": [
+        "clear",
+        "acceptable",
+        "degraded"
+      ],
+      "params": 4172159,
+      "model_mb": 32.401,
+      "latency_ms": 8.014,
+      "best_val_f1": 0.70997,
+      "test_macro_f1": 0.72497,
+      "accuracy": 0.72431,
+      "auc": 0.87338,
+      "ece": 0.01909,
+      "temperature": 0.77538,
+      "ema_selected": false,
+      "decision_val_f1": 0.714816,
+      "decision_config": {
+        "type": "logit_bias",
+        "bias": [
+          -0.12,
+          0.0,
+          -0.04
+        ],
+        "base_val_f1": 0.711047,
+        "decision_val_f1": 0.714816,
+        "class_names": [
+          "clear",
+          "acceptable",
+          "degraded"
+        ]
+      },
+      "path": "/kaggle/working/cnn3_quality.pt"
+    },
+    {
+      "model": "cnn4_tamper",
+      "classes": 2,
+      "labels": [
+        "authentic",
+        "tampered"
+      ],
+      "params": 6677666,
+      "model_mb": 51.766,
+      "latency_ms": 10.874,
+      "best_val_f1": 0.92656,
+      "test_macro_f1": 0.93843,
+      "accuracy": 0.93844,
+      "auc": 0.98382,
+      "ece": 0.01016,
+      "temperature": 1.06495,
+      "ema_selected": false,
+      "decision_val_f1": 0.92857,
+      "decision_config": {
+        "type": "argmax",
+        "base_val_f1": 0.92857,
+        "decision_val_f1": 0.92857,
+        "class_names": [
+          "authentic",
+          "tampered"
+        ]
+      },
+      "path": "/kaggle/working/cnn4_tamper.pt"
+    }
+  ],
+  "xai_outputs": {
+    "cnn1_content": "/kaggle/working/results/xai/cnn1_content",
+    "cnn2_evidence": "/kaggle/working/results/xai/cnn2_evidence",
+    "cnn3_quality": "/kaggle/working/results/xai/cnn3_quality",
+    "cnn4_tamper": "/kaggle/working/results/xai/cnn4_tamper"
+  },
+  "integration_outputs": [
+    "*_pipeline.json",
+    "model_comparison.json",
+    "run_manifest.json",
+    "integration_schema.json"
+  ]
+}

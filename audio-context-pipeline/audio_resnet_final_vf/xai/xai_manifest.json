@@ -1,0 +1,62 @@
+[
+  {
+    "class": "alarm_signal",
+    "artifact": "alarm_signal_grad-cam_gradcam.png",
+    "path": "/kaggle/working/audio_resnet_final_vf/xai/alarm_signal_grad-cam_gradcam.png"
+  },
+  {
+    "class": "alarm_signal",
+    "artifact": "alarm_signal_lime-style_lime_style.png",
+    "path": "/kaggle/working/audio_resnet_final_vf/xai/alarm_signal_lime-style_lime_style.png"
+  },
+  {
+    "class": "gunshot",
+    "artifact": "gunshot_grad-cam_gradcam.png",
+    "path": "/kaggle/working/audio_resnet_final_vf/xai/gunshot_grad-cam_gradcam.png"
+  },
+  {
+    "class": "gunshot",
+    "artifact": "gunshot_lime-style_lime_style.png",
+    "path": "/kaggle/working/audio_resnet_final_vf/xai/gunshot_lime-style_lime_style.png"
+  },
+  {
+    "class": "background",
+    "artifact": "background_grad-cam_gradcam.png",
+    "path": "/kaggle/working/audio_resnet_final_vf/xai/background_grad-cam_gradcam.png"
+  },
+  {
+    "class": "background",
+    "artifact": "background_lime-style_lime_style.png",
+    "path": "/kaggle/working/audio_resnet_final_vf/xai/background_lime-style_lime_style.png"
+  },
+  {
+    "class": "baby_cry",
+    "artifact": "baby_cry_grad-cam_gradcam.png",
+    "path": "/kaggle/working/audio_resnet_final_vf/xai/baby_cry_grad-cam_gradcam.png"
+  },
+  {
+    "class": "baby_cry",
+    "artifact": "baby_cry_lime-style_lime_style.png",
+    "path": "/kaggle/working/audio_resnet_final_vf/xai/baby_cry_lime-style_lime_style.png"
+  },
+  {
+    "class": "human_voice",
+    "artifact": "human_voice_grad-cam_gradcam.png",
+    "path": "/kaggle/working/audio_resnet_final_vf/xai/human_voice_grad-cam_gradcam.png"
+  },
+  {
+    "class": "human_voice",
+    "artifact": "human_voice_lime-style_lime_style.png",
+    "path": "/kaggle/working/audio_resnet_final_vf/xai/human_voice_lime-style_lime_style.png"
+  },
+  {
+    "class": "glass_break",
+    "artifact": "glass_break_grad-cam_gradcam.png",
+    "path": "/kaggle/working/audio_resnet_final_vf/xai/glass_break_grad-cam_gradcam.png"
+  },
+  {
+    "class": "glass_break",
+    "artifact": "glass_break_lime-style_lime_style.png",
+    "path": "/kaggle/working/audio_resnet_final_vf/xai/glass_break_lime-style_lime_style.png"
+  }
+]

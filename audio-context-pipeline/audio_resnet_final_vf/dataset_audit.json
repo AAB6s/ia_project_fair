@@ -1,0 +1,71 @@
+{
+  "classes": [
+    "gunshot",
+    "glass_break",
+    "alarm_signal",
+    "human_voice",
+    "baby_cry",
+    "background"
+  ],
+  "source_counts": {
+    "ESC-50": 2000,
+    "UrbanSound8K": 8732,
+    "RAVDESS": 1440,
+    "CREMA-D": 7442,
+    "Gunshot": 851,
+    "Siren": 600,
+    "BabyCry": 457,
+    "Music": 64
+  },
+  "raw_counts": {
+    "alarm_signal": 1878,
+    "baby_cry": 497,
+    "background": 7824,
+    "glass_break": 40,
+    "gunshot": 1225,
+    "human_voice": 10122
+  },
+  "dedup_counts": {
+    "alarm_signal": 1825,
+    "baby_cry": 495,
+    "background": 7811,
+    "glass_break": 40,
+    "gunshot": 1123,
+    "human_voice": 10093
+  },
+  "capped_counts": {
+    "alarm_signal": 1800,
+    "baby_cry": 495,
+    "background": 1800,
+    "glass_break": 40,
+    "gunshot": 1123,
+    "human_voice": 1800
+  },
+  "split_counts": {
+    "train": {
+      "alarm_signal": 1260,
+      "baby_cry": 900,
+      "background": 1260,
+      "glass_break": 900,
+      "gunshot": 1000,
+      "human_voice": 1260
+    },
+    "val": {
+      "alarm_signal": 270,
+      "baby_cry": 74,
+      "background": 270,
+      "glass_break": 6,
+      "gunshot": 169,
+      "human_voice": 270
+    },
+    "test": {
+      "alarm_signal": 270,
+      "baby_cry": 74,
+      "background": 270,
+      "glass_break": 6,
+      "gunshot": 169,
+      "human_voice": 270
+    }
+  },
+  "split_rule": "70/15/15 stratified, deduplicate before split, augment train only"
+}

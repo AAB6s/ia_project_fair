@@ -1,0 +1,20 @@
+{
+  "model": "resnet34_final",
+  "accuracy": 0.96978,
+  "macro_f1": 0.92483,
+  "weighted_f1": 0.97046,
+  "precision_macro": 0.89739,
+  "recall_macro": 0.98025,
+  "auc_macro_ovr": 0.99722,
+  "ece": 0.01605,
+  "temperature": 0.7,
+  "parameters": 21484742,
+  "model_mb": 82.106,
+  "latency_ms": 4.197,
+  "best_val_f1": 0.91345,
+  "tta_shifts": [
+    -8,
+    0,
+    8
+  ]
+}

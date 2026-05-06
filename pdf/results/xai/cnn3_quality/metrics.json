@@ -1,0 +1,58 @@
+{
+  "accuracy": 0.72431,
+  "macro_f1": 0.72497,
+  "auc": 0.87338,
+  "ece": 0.01909,
+  "top_confusions": [
+    {
+      "true": "clear",
+      "predicted": "acceptable",
+      "count": 259
+    },
+    {
+      "true": "acceptable",
+      "predicted": "clear",
+      "count": 238
+    },
+    {
+      "true": "degraded",
+      "predicted": "acceptable",
+      "count": 226
+    },
+    {
+      "true": "acceptable",
+      "predicted": "degraded",
+      "count": 177
+    },
+    {
+      "true": "degraded",
+      "predicted": "clear",
+      "count": 9
+    },
+    {
+      "true": "clear",
+      "predicted": "degraded",
+      "count": 6
+    }
+  ],
+  "per_class": {
+    "clear": {
+      "precision": 0.68931,
+      "recall": 0.67405,
+      "f1": 0.68159,
+      "support": 813
+    },
+    "acceptable": {
+      "precision": 0.69284,
+      "recall": 0.72498,
+      "f1": 0.70855,
+      "support": 1509
+    },
+    "degraded": {
+      "precision": 0.80635,
+      "recall": 0.76429,
+      "f1": 0.78476,
+      "support": 997
+    }
+  }
+}

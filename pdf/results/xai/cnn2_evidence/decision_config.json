@@ -1,0 +1,10 @@
+{
+  "type": "binary_threshold",
+  "threshold": 0.505,
+  "base_val_f1": 0.949523,
+  "decision_val_f1": 0.949861,
+  "class_names": [
+    "primary_evidence",
+    "secondary_evidence"
+  ]
+}
