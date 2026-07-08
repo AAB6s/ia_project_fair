@@ -1,9 +1,18 @@
 .env
+.env.*
+!.env.example
+.venv/
+venv/
+env/
+__pypackages__/
 *.pyc
 *.pyo
 *.pyd
 __pycache__/
 .ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 uploads/
 */uploads/
 *.pt
@@ -12,6 +21,8 @@ uploads/
 *.ckpt
 *.safetensors
 *.h5
+*.joblib
+*.pkl
 *.log
 *.tmp
 .DS_Store
